@@ -1,0 +1,28 @@
+﻿<Window x:Class="CommunityManager.Windows.Message"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CommunityManager.Windows"
+        mc:Ignorable="d"
+        Title="{Binding Title}" Height="{Binding WindowHeight,FallbackValue=250}" Width="{Binding WindowWidth,FallbackValue=400}">
+  <DockPanel>
+    <DockPanel DockPanel.Dock="Bottom" LastChildFill="False">
+      <ItemsControl ItemsSource="{Binding AvailableDialogResults}">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <StackPanel Orientation="Horizontal" />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <Button DockPanel.Dock="Right"  Content="{Binding}" Tag="{Binding}" Click="btn_Click" Margin="8" Padding="8" />
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </DockPanel>
+    <Label Margin="8">
+      <TextBlock Text="{Binding Prompt}" TextWrapping="Wrap" />
+    </Label>
+  </DockPanel>
+</Window>
