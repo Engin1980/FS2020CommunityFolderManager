@@ -1,0 +1,43 @@
+﻿<Window x:Class="CommunityManager.Windows.SettingsOverview"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CommunityManager.Windows"
+        mc:Ignorable="d"
+        Title="SettingsOverview" Height="450" Width="800" Closed="Window_Closed">
+  <DockPanel>
+    <DockPanel DockPanel.Dock="Top">
+      <DockPanel DockPanel.Dock="Top" LastChildFill="False">
+        <Button x:Name="btnClose" Content="Close" DockPanel.Dock="Right" 
+              Template="{StaticResource ButtonStyle}" 
+              Click="btnClose_Click"/>
+        <Button x:Name="btnSave" Content="Save" DockPanel.Dock="Right" 
+              Template="{StaticResource ButtonStyle}" 
+              Click="btnSave_Click"/>
+        <Button x:Name="btnLoad" Content="Reload" DockPanel.Dock="Right" 
+              Template="{StaticResource ButtonStyle}" 
+              Click="btnLoad_Click"/>
+      </DockPanel>
+    </DockPanel>
+    <Grid Margin="8">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition />
+        <ColumnDefinition />
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="24" />
+        <RowDefinition Height="24"/>
+      </Grid.RowDefinitions>
+      <Label Grid.Row="0" Grid.Column="0" Content="FS2020 Community Folder" />
+      <DockPanel Grid.Row="0" Grid.Column="1" >
+        <Button x:Name="btnBrowseCommunityFolder" DockPanel.Dock="Right" Content="(...)" 
+                Click="btnBrowseCommunityFolder_Click" />
+        <TextBox Text="{Binding CommunityFolderPath}" />
+      </DockPanel>
+      <DockPanel Grid.Row="1" Grid.Column="1" >
+        <TextBox Text="{Binding CommunityFolderPath}" />
+      </DockPanel>
+    </Grid>
+  </DockPanel>
+</Window>

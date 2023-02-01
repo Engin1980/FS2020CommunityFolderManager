@@ -15,4 +15,8 @@
     <Folder Include="Images\Icons\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="WindowsAPICodePack" Version="7.0.1" />
+  </ItemGroup>
+
 </Project>

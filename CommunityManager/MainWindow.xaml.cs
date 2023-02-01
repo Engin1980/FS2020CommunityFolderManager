@@ -46,7 +46,7 @@ namespace CommunityManager
 
     public void Bind(Project project)
     {
-      this.Project = Project;
+      this.Project = project;
     }
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -67,9 +67,19 @@ namespace CommunityManager
         f.ShowDialog();
         f.Focus();
         this.Show();
+        if (p == null)
+          p = Project.CreateEmpty();
       }
 
       this.Bind(p);
+    }
+
+    private void btnSettings_Click(object sender, RoutedEventArgs e)
+    {
+      var f = new SettingsOverview();
+      f.Bind(Project);
+      f.Show();
+      this.Hide();
     }
   }
 }

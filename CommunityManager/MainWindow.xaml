@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CommunityManager"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded">
+        Title="MainWindow" Height="550" Width="800" Loaded="Window_Loaded">
   <DockPanel LastChildFill="False">
     <Label DockPanel.Dock="Top" FontWeight="Bold" FontSize="24" HorizontalAlignment="Center">
       <Label.Content>
@@ -31,7 +31,7 @@
     <Button x:Name="btnAddonOverview" Margin="32 8 32 8" Padding="8" Content="Addon Management" DockPanel.Dock="Top" Click="btnAddonOverview_Click" />
     <Button x:Name="btnProgramOverview" Margin="32 8 32 8" Padding="8" Content="Program Management" DockPanel.Dock="Top" />
     <Button x:Name="btnStartupConfigOverview" Margin="32 8 32 8" Padding="8" Content="Startup Configurations" DockPanel.Dock="Top" />
-    <Button x:Name="btnSettings" Margin="32 8 32 8" Padding="8" Content="Settings" DockPanel.Dock="Top" />
+    <Button x:Name="btnSettings" Margin="32 8 32 8" Padding="8" Content="Settings" DockPanel.Dock="Top" Click="btnSettings_Click" />
     <Button x:Name="btnQuit"  Margin="32 8 32 8" Padding="8" Content="Quit" DockPanel.Dock="Top" Click="btnQuit_Click" />
   </DockPanel>
 </Window>
