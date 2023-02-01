@@ -4,99 +4,33 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CommunityManager"
-        xmlns:converters="clr-namespace:CommunityManager.Converters"
-        xmlns:ctr="clr-namespace:CommunityManager.Controls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded">
-  <Window.Resources>
-    <converters:TagToBackgroundConverter x:Key="TagToBackgroundConverter" />
-  </Window.Resources>
-  <DockPanel>
-    <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" Margin="2">
-      <Button x:Name="btnLoad" Content="Reload" Margin="2" Padding="8"  Template="{StaticResource ButtonStyle}" 
-              Click="btnLoad_Click"/>
-      <Button x:Name="btnSave" Content="Save" Margin="2"  Padding="8" Template="{StaticResource ButtonStyle}" 
-              Click="btnSave_Click"/>
-      <Button x:Name="btnClose" Content="Close" Margin="2"  Padding="8" Template="{StaticResource ButtonStyle}" 
-              Click="btnClose_Click"/>
-    </StackPanel>
-    <TabControl>
-      <TabControl.Resources>
-        <Style TargetType="TabItem">
-          <Setter Property="Template">
-            <Setter.Value>
-              <ControlTemplate TargetType="TabItem">
-                <Border Name="Border" BorderThickness="1,1,1,0" BorderBrush="Gainsboro" 
-                        CornerRadius="8, 8,0,0" Margin="8 4 8 0"> 
-                  <ContentPresenter x:Name="ContentSite"
-                                        VerticalAlignment="Center"
-                                        HorizontalAlignment="Center"
-                                        ContentSource="Header"
-                                        Margin="10,2" />
-                </Border>
-                <ControlTemplate.Triggers>
-                  <Trigger Property="IsSelected" Value="True">
-                    <Setter TargetName="Border" Property="Background" Value="White" />
-                  </Trigger>
-                  <Trigger Property="IsSelected" Value="False">
-                    <Setter TargetName="Border" Property="Background" Value="GhostWhite" />
-                  </Trigger>
-                </ControlTemplate.Triggers>
-              </ControlTemplate>
-            </Setter.Value>
-          </Setter>
-        </Style>
-      </TabControl.Resources>
-      <TabItem Header="Addons">
-        <DockPanel>
-          <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-            <Button x:Name="btnCustomTitle" Template="{StaticResource ButtonStyle}" 
-                    Content="Custom Title" Click="btnCustomTitle_Click" />
-            <Button x:Name="btnAssignTags"  Template="{StaticResource ButtonStyle}" 
-                    Content="Assing Tags" Click="btnAssignTags_Click"/>
-          </StackPanel>
-          <ScrollViewer VerticalScrollBarVisibility="Visible">
-            <ListView x:Name="lstAddonStates" ItemsSource="{Binding}">
-              <ListView.ItemTemplate>
-                <DataTemplate>
-                  <StackPanel>
-                    <StackPanel Margin="8" Orientation="Horizontal">
-                      <TextBlock>
-                      <TextBlock Text="{Binding DisplayTitle}" FontWeight="Bold" />
-                      <TextBlock Text=" .\" />
-                      <TextBlock Text="{Binding Addon.Folder}" />
-                      <TextBlock Text="{Binding DisplayCreator}" Margin="8 0 0 0" />
-                    </TextBlock>
-                    </StackPanel>
-                    <StackPanel x:Name="pnlTags" Orientation="Horizontal" Margin="32 0 0 0">
-                      <ItemsControl ItemsSource="{Binding Tags}" >
-                        <ItemsControl.ItemsPanel>
-                          <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal" />
-                          </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                          <DataTemplate>
-                            <Border BorderBrush="#FF000000" 
-                                    Background="{Binding Converter={StaticResource TagToBackgroundConverter}}" 
-                                    BorderThickness="1" CornerRadius="8" Margin="2" Padding="8 2 8 2"
-                                    HorizontalAlignment="Center">
-                              <TextBlock Text="{Binding}" />
-                            </Border>
-                          </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                      </ItemsControl>
-                    </StackPanel>
-                  </StackPanel>
-                </DataTemplate>
-              </ListView.ItemTemplate>
-            </ListView>
-          </ScrollViewer>
-        </DockPanel>
-      </TabItem>
-      <TabItem Header="Programs">
-
-      </TabItem>
-    </TabControl>
+        Title="MainWindow" Height="450" Width="800">
+  <DockPanel LastChildFill="False">
+    <Label DockPanel.Dock="Top" FontWeight="Bold" FontSize="24" HorizontalAlignment="Center">
+      <Label.Content>
+        MSFS2020 Community Folder &amp; Program Manager
+      </Label.Content>
+    </Label>
+    <GroupBox Header="Startup sets" Margin="32 8 32 8" DockPanel.Dock="Top" >
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition />
+          <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition />
+          <RowDefinition />
+        </Grid.RowDefinitions>
+        <Button Grid.Column="0" Grid.Row="0" Content="Start" Margin="16" />
+        <Button Grid.Column="0" Grid.Row="1" Content="Start" Margin="16" />
+        <Button Grid.Column="1" Grid.Row="0" Content="Start" Margin="16" />
+        <Button Grid.Column="1" Grid.Row="1" Content="Start" Margin="16" />
+      </Grid>
+    </GroupBox>
+    <Button x:Name="btnAddonOverview" Margin="32 8 32 8" Padding="8" Content="Addon Management" DockPanel.Dock="Top" Click="btnAddonOverview_Click" />
+    <Button x:Name="btnProgramOverview" Margin="32 8 32 8" Padding="8" Content="Program Management" DockPanel.Dock="Top" />
+    <Button x:Name="btnStartupConfigOverview" Margin="32 8 32 8" Padding="8" Content="Startup Configurations" DockPanel.Dock="Top" />
+    <Button x:Name="btnQuit"  Margin="32 8 32 8" Padding="8" Content="Quit" DockPanel.Dock="Top" Click="btnQuit_Click" />
   </DockPanel>
 </Window>

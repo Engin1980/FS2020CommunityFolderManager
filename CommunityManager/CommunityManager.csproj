@@ -11,4 +11,8 @@
     <ProjectReference Include="..\CommunityManagerLib\CommunityManagerLib.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Images\Icons\" />
+  </ItemGroup>
+
 </Project>
