@@ -18,11 +18,14 @@
         <Button x:Name="btnAssignTags"  DockPanel.Dock="Left" Template="{StaticResource ButtonStyle}" 
                     Content="Assing Tags" Click="btnAssignTags_Click"/>
 
-        <Button x:Name="btnClose" Content="Close" DockPanel.Dock="Right" Margin="2"  Padding="8" Template="{StaticResource ButtonStyle}" 
+        <Button x:Name="btnClose" Content="Close" DockPanel.Dock="Right" Margin="2"  Padding="8" 
+                Template="{StaticResource ButtonStyle}" 
               Click="btnClose_Click"/>
-        <Button x:Name="btnSave" Content="Save" DockPanel.Dock="Right" Margin="2"  Padding="8" Template="{StaticResource ButtonStyle}" 
+        <Button x:Name="btnSave" Content="Save" DockPanel.Dock="Right" Margin="2"  Padding="8" 
+                Template="{StaticResource ButtonStyle}" 
               Click="btnSave_Click"/>
-        <Button x:Name="btnLoad" Content="Reload" DockPanel.Dock="Right" Margin="2" Padding="8"  Template="{StaticResource ButtonStyle}" 
+        <Button x:Name="btnLoad" Content="Reload" DockPanel.Dock="Right" Margin="2" Padding="8"  
+                Template="{StaticResource ButtonStyle}" 
               Click="btnLoad_Click"/>
       </DockPanel>
       <ScrollViewer VerticalScrollBarVisibility="Visible">
@@ -39,7 +42,7 @@
                     </TextBlock>
                 </StackPanel>
                 <StackPanel x:Name="pnlTags" Orientation="Horizontal" Margin="32 0 0 0">
-                  <ItemsControl ItemsSource="{Binding Tags}" >
+                  <ItemsControl ItemsSource="{Binding State.Tags}" >
                     <ItemsControl.ItemsPanel>
                       <ItemsPanelTemplate>
                         <StackPanel Orientation="Horizontal" />

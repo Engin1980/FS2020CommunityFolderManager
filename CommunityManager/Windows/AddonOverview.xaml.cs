@@ -1,4 +1,5 @@
 ﻿using CommunityManagerLib;
+using CommunityManagerLib.Addons;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,49 +22,49 @@ namespace CommunityManager.Windows
   /// </summary>
   public partial class AddonOverview : Window
   {
+    private Project Project { get; set; }
     public AddonOverview()
     {
       InitializeComponent();
+    }
+
+    public void Bind(Project project)
+    {
+      this.Project = project;
+      this.DataContext = project.Addons;
     }
 
     private const string COMMUNITY_FOLDER = "D:\\FS2020\\Community";
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-      LoadData(false);
     }
 
-    private void LoadData(bool prompts = true)
+    private void LoadData()
     {
-      if (prompts)
-        if (Message.ShowDialog(
-          "Load",
-          "You will loose all unsaved changes. Are you sure you would like to reload the data?",
-          Types.DialogResult.Yes, Types.DialogResult.Cancel) == Types.DialogResult.Cancel) return;
+      if (Message.ShowDialog(
+         "Load",
+         "You will loose all unsaved changes. Are you sure you would like to reload the data?",
+         Types.DialogResult.Yes, Types.DialogResult.Cancel) == Types.DialogResult.Cancel) return;
 
-      AddonScanner scanner = new();
-      BindingList<AddonState> lst = scanner.ScanAddons(COMMUNITY_FOLDER).ToBindingList();
-      DataContext = lst;
-      if (prompts)
-        Message.ShowDialog("Reloaded.", "Changes have been reloaded.", Types.DialogResult.Ok);
+      this.Project.ReloadAddons();
+      Message.ShowDialog("Reloaded.", "Changes have been reloaded.", Types.DialogResult.Ok);
     }
 
     private void SaveData()
     {
-      AddonScanner scanner = new();
-      BindingList<AddonState> lst = (BindingList<AddonState>)this.DataContext;
-      scanner.SaveAddonsState(lst.ToList(), COMMUNITY_FOLDER);
+      this.Project.SaveAddons();
       Message.ShowDialog("Saved.", "Changes have been saved.", Types.DialogResult.Ok);
     }
 
     private void btnCustomTitle_Click(object sender, RoutedEventArgs e)
     {
-      if (lstAddonStates.SelectedItem is not AddonState addonState) return;
+      if (lstAddonStates.SelectedItem is not AddonInfo addonInfo) return;
 
       Input.Data data = new(
         "Adjust Custom Title...",
         "Set the new custom title for the addon:",
-        addonState.CustomTitle ?? addonState.Addon.ManifestTitle ?? ""
+        addonInfo.State.CustomTitle ?? addonInfo.Addon.ManifestTitle ?? ""
         )
       {
         WindowHeight = 100,
@@ -75,14 +76,14 @@ namespace CommunityManager.Windows
 
       if (data.DialogResult == Types.DialogResult.Cancel) return;
 
-      addonState.CustomTitle = data.Value.Trim();
+      addonInfo.State.CustomTitle = data.Value.Trim();
     }
 
     private void btnAssignTags_Click(object sender, RoutedEventArgs e)
     {
-      if (lstAddonStates.SelectedItem is not AddonState addonState) return;
+      if (lstAddonStates.SelectedItem is not AddonInfo addonInfo) return;
 
-      var tmp = (BindingList<AddonState>)this.DataContext!;
+      var tmp = (BindingList<State>)this.DataContext!;
       BindingList<TagEditor.CheckItem> tags = tmp
         .SelectMany(q => q.Tags)
         .Distinct()
@@ -101,7 +102,7 @@ namespace CommunityManager.Windows
 
       if (data.DialogResult == Types.DialogResult.Cancel) return;
 
-      addonState.SetTags(data.Tags.Where(q => q.IsChecked).Select(q => q.Label).ToList());
+      addonInfo.State.Tags = data.Tags.Where(q => q.IsChecked).Select(q => q.Label).ToList();
       int selectedIndex = lstAddonStates.SelectedIndex;
       lstAddonStates.DataContext = null;
       lstAddonStates.DataContext = this.DataContext; //TODO improve how here reset of binding is done
@@ -120,12 +121,9 @@ namespace CommunityManager.Windows
 
     private void btnClose_Click(object sender, RoutedEventArgs e)
     {
-      if (Message.ShowDialog(
-        "Close window?",
-        "All unsaved changes will be lost. Really close the window?",
-        Types.DialogResult.Yes, Types.DialogResult.No) == Types.DialogResult.No) return;
-
-      new MainWindow().Show();
+      var f = new MainWindow();
+      f.Bind(this.Project);
+      f.Show();
       this.Close();
     }
   }

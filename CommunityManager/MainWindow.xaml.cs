@@ -24,7 +24,7 @@ namespace CommunityManager
   /// </summary>
   public partial class MainWindow : Window
   {
-    
+    public Project Project { get; set; }
 
     public MainWindow()
     {
@@ -38,8 +38,38 @@ namespace CommunityManager
 
     private void btnAddonOverview_Click(object sender, RoutedEventArgs e)
     {
-      new AddonOverview().Show();
+      var f = new AddonOverview();
+      f.Bind(Project);
+      f.Show();
       this.Hide();
+    }
+
+    public void Bind(Project project)
+    {
+      this.Project = Project;
+    }
+
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+      var p = Project.Load(out List<string> issues);
+      if (issues.Count > 0)
+      {
+        string prompt = "There were issues during the app startup:\n\n" +
+          string.Join("\n\n *)\t", issues);
+        var d = new Message.Data("Issues during start up.", prompt, Types.DialogResult.Ok)
+        {
+          WindowHeight = 400,
+          WindowWidth = 600
+        };
+        var f = new Message();
+        f.Bind(d);
+        this.Hide();
+        f.ShowDialog();
+        f.Focus();
+        this.Show();
+      }
+
+      this.Bind(p);
     }
   }
 }
