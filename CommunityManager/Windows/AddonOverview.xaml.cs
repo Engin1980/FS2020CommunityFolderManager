@@ -1,4 +1,5 @@
-﻿using CommunityManagerLib;
+﻿using CommunityManager.Controls;
+using CommunityManagerLib;
 using CommunityManagerLib.Addons;
 using System;
 using System.Collections.Generic;
@@ -73,9 +74,7 @@ namespace CommunityManager.Windows
         WindowHeight = 100,
         WindowWidth = 200
       };
-      Input frmInput = new();
-      frmInput.Bind(data);
-      frmInput.ShowDialog();
+      new Input(data).ShowDialog();
 
       if (data.DialogResult == Types.DialogResult.Cancel) return;
 
@@ -92,11 +91,8 @@ namespace CommunityManager.Windows
     private void UpdateTags(AddonInfo addonInfo)
     {
       var tmp = (BindingList<AddonInfo>)this.DataContext!;
-      BindingList<TagEditor.CheckItem> tags = tmp
-        .SelectMany(q => q.State.Tags)
-        .Distinct()
-        .OrderBy(q => q)
-        .Select(q => new TagEditor.CheckItem(q, false))
+      BindingList<TagEditor.CheckItem> tags = Project.GetAllTags()
+        .Select(q => new TagEditor.CheckItem(q, addonInfo.State.Tags.Contains(q)))
         .ToBindingList();
 
       TagEditor.Data data = new()
@@ -143,10 +139,10 @@ namespace CommunityManager.Windows
 
     }
 
-    private void lblTag_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    private void TagPanel_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-      Label label = (Label)sender;
-      string tag = (string)label.Tag;
+      TagPanel panel = (TagPanel)sender;
+      string tag = (string)panel.Tag;
       AddonInfo addonInfo = this.Project.Addons.Single(q => q.Addon.Folder == tag);
       UpdateTags(addonInfo);
     }

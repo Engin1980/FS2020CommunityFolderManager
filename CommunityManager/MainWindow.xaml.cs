@@ -81,5 +81,11 @@ namespace CommunityManager
       new SettingsOverview(Project).Show();
       this.Hide();
     }
+
+    private void btnProgramOverview_Click(object sender, RoutedEventArgs e)
+    {
+      new ProgramOverview(this.Project).Show();
+      this.Hide();
+    }
   }
 }

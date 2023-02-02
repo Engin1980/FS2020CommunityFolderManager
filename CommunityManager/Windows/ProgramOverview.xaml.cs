@@ -1,6 +1,11 @@
-﻿using CommunityManagerLib;
+﻿using CommunityManager.Controls;
+using CommunityManagerLib;
+using CommunityManagerLib.Addons;
+using CommunityManagerLib.Programs;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,12 +30,14 @@ namespace CommunityManager.Windows
       InitializeComponent();
     }
 
-    private Project Project { get; set; }
-
-    public void Bind(Project project)
+    public ProgramOverview(Project project) : this()
     {
+      InitializeComponent();
       Project = project;
+      this.DataContext = Project.Programs;
     }
+
+    private Project Project { get; set; }
 
     private void btnLoad_Click(object sender, RoutedEventArgs e)
     {
@@ -55,13 +62,100 @@ namespace CommunityManager.Windows
     }
 
     private void btnClose_Click(object sender, RoutedEventArgs e)
-    {      
+    {
       this.Close();
     }
 
     private void Window_Closed(object sender, EventArgs e)
     {
       new MainWindow(this.Project).Show();
+    }
+
+    private void btnAdd_Click(object sender, RoutedEventArgs e)
+    {
+      CommonOpenFileDialog dialog = new()
+      {
+        DefaultExtension = ".exe",
+        EnsureFileExists = true,
+        EnsurePathExists = true,
+        Multiselect = false,
+        Title = "Select executable file..."
+      };
+      dialog.Filters.Add(new CommonFileDialogFilter("Executable file (*.exe)", "exe"));
+      dialog.Filters.Add(new CommonFileDialogFilter("All files (*.*)", "*"));
+      var res = dialog.ShowDialog();
+      if (res != CommonFileDialogResult.Ok) return;
+
+      Program program = new(dialog.FileName);
+      this.Project.Programs.Add(program);
+    }
+
+    private void lblName_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+      var path = (string)((Label)sender).Tag;
+      Program program = Project.Programs.Single(q => q.Path == path);
+      UpdateCustomTitle(program);      
+    }
+
+    private void UpdateCustomTitle(Program program)
+    {
+      var data = new Input.Data("Custom title...", "Select custom title (or set empty to delete the current one):", "")
+      {
+        WindowHeight = 100,
+        WindowWidth = 200
+      };
+      new Input(data).ShowDialog();
+      if (data.DialogResult != Types.DialogResult.Ok) return;
+
+
+      if (data.Value.Trim() == "")
+        program.CustomName = null;
+      else
+        program.CustomName = data.Value;
+    }
+
+    private void TagPanel_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+      TagPanel panel = (TagPanel)sender;
+      string tag = (string)panel.Tag;
+      Program program = this.Project.Programs.Single(q => q.Path == tag);
+      UpdateTags(program);
+    }
+
+    private void UpdateTags(Program program)
+    {
+      var tmp = (BindingList<Program>)this.DataContext!;
+      BindingList<TagEditor.CheckItem> tags = Project.GetAllTags()
+        .Select(q => new TagEditor.CheckItem(q, program.Tags.Contains(q)))
+        .ToBindingList();
+
+      TagEditor.Data data = new()
+      {
+        Tags = tags
+      };
+      new TagEditor(data).ShowDialog();
+      if (data.DialogResult == Types.DialogResult.Cancel) return;
+
+      program.Tags = data.Tags.Where(q => q.IsChecked).Select(q => q.Label).ToList();
+      int selectedIndex = lstPrograms.SelectedIndex;
+      lstPrograms.DataContext = null;
+      lstPrograms.DataContext = this.DataContext; //TODO improve how here reset of binding is done
+      lstPrograms.SelectedIndex = selectedIndex;
+    }
+
+    private void btnCustomTitle_Click(object sender, RoutedEventArgs e)
+    {
+      if (lstPrograms.SelectedIndex < 0) return;
+      Program program = (Program)lstPrograms.SelectedItem;
+      UpdateCustomTitle(program);
+
+    }
+
+    private void btnTags_Click(object sender, RoutedEventArgs e)
+    {
+      if (lstPrograms.SelectedIndex < 0) return;
+      Program program = (Program)lstPrograms.SelectedItem;
+      UpdateTags(program);
     }
   }
 }

@@ -4,16 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CommunityManager.Windows"
-        xmlns:converters="clr-namespace:CommunityManager.Converters"
+        xmlns:controls="clr-namespace:CommunityManager.Controls"
         mc:Ignorable="d"
         Title="ProgramOverview" Height="450" Width="800" Closed="Window_Closed">
-  <Window.Resources>
-    <converters:TagToBackgroundConverter x:Key="TagToBackgroundConverter" />
-  </Window.Resources>
   <DockPanel>
     <DockPanel DockPanel.Dock="Top" LastChildFill="False">
       <Button x:Name="btnAdd" DockPanel.Dock="Left" Template="{StaticResource ButtonStyle}" 
-                    Content="Add program"  />
+                    Content="Add program" Click="btnAdd_Click"  />
+      <Button x:Name="btnCustomTitle" DockPanel.Dock="Left" Template="{StaticResource ButtonStyle}" 
+                    Content="Custom title" Click="btnCustomTitle_Click" />
+      <Button x:Name="btnTags" DockPanel.Dock="Left" Template="{StaticResource ButtonStyle}" 
+                    Content="Edit tags" Click="btnTags_Click" />
       <Button x:Name="btnDelete"  DockPanel.Dock="Left" Template="{StaticResource ButtonStyle}" 
                     Content="Delete program" />
       <Button x:Name="btnClose" Content="Close" DockPanel.Dock="Right" 
@@ -26,36 +27,23 @@
               Template="{StaticResource ButtonStyle}" 
               Click="btnLoad_Click"/>
     </DockPanel>
-    <ScrollViewer VerticalScrollBarVisibility="Visible">
-      <ListView>
-        <ListView.ItemTemplate>
-          <DataTemplate>
-            <StackPanel>
-              <TextBlock Text="{Binding FileName}"/>
-              <TextBlock Text="{Binding Path=Path}" />
-              <StackPanel x:Name="pnlTags" Orientation="Horizontal" Margin="32 0 0 0">
-                <ItemsControl ItemsSource="{Binding Tags}" >
-                  <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                      <StackPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                  </ItemsControl.ItemsPanel>
-                  <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                      <Border BorderBrush="#FF000000" 
-                                    Background="{Binding Converter={StaticResource TagToBackgroundConverter}}" 
-                                    BorderThickness="1" CornerRadius="8" Margin="2" Padding="8 2 8 2"
-                                    HorizontalAlignment="Center">
-                        <TextBlock Text="{Binding}" />
-                      </Border>
-                    </DataTemplate>
-                  </ItemsControl.ItemTemplate>
-                </ItemsControl>
-              </StackPanel>
-            </StackPanel>
-          </DataTemplate>
-        </ListView.ItemTemplate>
-      </ListView>
-    </ScrollViewer>
+    <ListView x:Name="lstPrograms" ItemsSource="{Binding}">
+      <ListView.Template>
+        <ControlTemplate>
+          <ScrollViewer>
+            <ItemsPresenter></ItemsPresenter>
+          </ScrollViewer>
+        </ControlTemplate>
+      </ListView.Template>
+      <ListView.ItemTemplate>
+        <DataTemplate>
+          <StackPanel>
+            <Label x:Name="lblName" Content="{Binding DisplayTitle}" FontWeight="Bold" MouseDoubleClick="lblName_MouseDoubleClick" />
+            <TextBlock Text="{Binding Path=Path}" Margin="32 0 0 0" />
+            <controls:TagPanel DataContext="{Binding Tags}" Margin="32 0 0 0" MouseDoubleClick="TagPanel_MouseDoubleClick" />
+          </StackPanel>
+        </DataTemplate>
+      </ListView.ItemTemplate>
+    </ListView>
   </DockPanel>
 </Window>

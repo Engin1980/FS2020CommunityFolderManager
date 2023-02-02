@@ -4,12 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CommunityManager.Windows"
-        xmlns:converters="clr-namespace:CommunityManager.Converters"
+        xmlns:controls="clr-namespace:CommunityManager.Controls"
         mc:Ignorable="d"
         Title="AddonOverview" Height="450" Width="800" Loaded="Window_Loaded" Closed="Window_Closed">
-  <Window.Resources>
-    <converters:TagToBackgroundConverter x:Key="TagToBackgroundConverter" />
-  </Window.Resources>
   <DockPanel>
     <DockPanel>
       <DockPanel DockPanel.Dock="Top" LastChildFill="False">
@@ -66,27 +63,12 @@
                   </Label>
                 </TextBlock>
               </StackPanel>
-              <StackPanel x:Name="pnlTags" Orientation="Horizontal" Margin="32 0 0 0">
-                <ItemsControl ItemsSource="{Binding State.Tags}" >
-                  <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                      <StackPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                  </ItemsControl.ItemsPanel>
-                  <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                      <Border BorderBrush="#FF000000" 
-                                    Background="{Binding Converter={StaticResource TagToBackgroundConverter}}" 
-                                    BorderThickness="1" CornerRadius="8" Margin="2" Padding="8 2 8 2"
-                                    HorizontalAlignment="Center">
-                        <Label x:Name="lblTag" Content="{Binding}" MouseDoubleClick="lblTag_MouseDoubleClick" 
-                               Margin="0" Padding="0"
-                               Tag="{Binding DataContext.Addon.Folder, ElementName=pnlTags}"/>
-                      </Border>
-                    </DataTemplate>
-                  </ItemsControl.ItemTemplate>
-                </ItemsControl>
-              </StackPanel>
+
+              <controls:TagPanel  
+                Tag="{Binding Path=DataContext.Addon.Folder, RelativeSource={RelativeSource AncestorType=StackPanel}}" 
+                DataContext="{Binding State.Tags}"
+                MouseDoubleClick="TagPanel_MouseDoubleClick" Margin="32 0 0 0"/>
+
             </StackPanel>
           </DataTemplate>
         </ListView.ItemTemplate>

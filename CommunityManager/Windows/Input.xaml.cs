@@ -41,7 +41,7 @@ namespace CommunityManager.Windows
       InitializeComponent();
     }
 
-    public void Bind(Data data)
+    public Input(Data data):this()
     {
       this.DataContext = data ?? throw new ArgumentNullException(nameof(data));
     }

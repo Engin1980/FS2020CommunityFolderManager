@@ -29,7 +29,7 @@
       </Grid>
     </GroupBox>
     <Button x:Name="btnAddonOverview" Margin="32 8 32 8" Padding="8" Content="Addon Management" DockPanel.Dock="Top" Click="btnAddonOverview_Click" />
-    <Button x:Name="btnProgramOverview" Margin="32 8 32 8" Padding="8" Content="Program Management" DockPanel.Dock="Top" />
+    <Button x:Name="btnProgramOverview" Margin="32 8 32 8" Padding="8" Content="Program Management" DockPanel.Dock="Top" Click="btnProgramOverview_Click" />
     <Button x:Name="btnStartupConfigOverview" Margin="32 8 32 8" Padding="8" Content="Startup Configurations" DockPanel.Dock="Top" />
     <Button x:Name="btnSettings" Margin="32 8 32 8" Padding="8" Content="Settings" DockPanel.Dock="Top" Click="btnSettings_Click" />
     <Button x:Name="btnQuit"  Margin="32 8 32 8" Padding="8" Content="Quit" DockPanel.Dock="Top" Click="btnQuit_Click" />
