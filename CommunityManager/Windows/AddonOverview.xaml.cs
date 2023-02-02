@@ -28,13 +28,11 @@ namespace CommunityManager.Windows
       InitializeComponent();
     }
 
-    public void Bind(Project project)
+    public AddonOverview(Project project) : this()
     {
       this.Project = project;
       this.DataContext = project.Addons;
     }
-
-    private const string COMMUNITY_FOLDER = "D:\\FS2020\\Community";
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
@@ -61,6 +59,11 @@ namespace CommunityManager.Windows
     {
       if (lstAddonStates.SelectedItem is not AddonInfo addonInfo) return;
 
+      UpdateCustomTitle(addonInfo);
+    }
+
+    private void UpdateCustomTitle(AddonInfo addonInfo)
+    {
       Input.Data data = new(
         "Adjust Custom Title...",
         "Set the new custom title for the addon:",
@@ -83,9 +86,14 @@ namespace CommunityManager.Windows
     {
       if (lstAddonStates.SelectedItem is not AddonInfo addonInfo) return;
 
-      var tmp = (BindingList<State>)this.DataContext!;
+      UpdateTags(addonInfo);
+    }
+
+    private void UpdateTags(AddonInfo addonInfo)
+    {
+      var tmp = (BindingList<AddonInfo>)this.DataContext!;
       BindingList<TagEditor.CheckItem> tags = tmp
-        .SelectMany(q => q.Tags)
+        .SelectMany(q => q.State.Tags)
         .Distinct()
         .OrderBy(q => q)
         .Select(q => new TagEditor.CheckItem(q, false))
@@ -95,11 +103,7 @@ namespace CommunityManager.Windows
       {
         Tags = tags
       };
-
-      TagEditor tagEditor = new();
-      tagEditor.Bind(data);
-      tagEditor.ShowDialog();
-
+      new TagEditor(data).ShowDialog();
       if (data.DialogResult == Types.DialogResult.Cancel) return;
 
       addonInfo.State.Tags = data.Tags.Where(q => q.IsChecked).Select(q => q.Label).ToList();
@@ -121,10 +125,30 @@ namespace CommunityManager.Windows
 
     private void btnClose_Click(object sender, RoutedEventArgs e)
     {
-      var f = new MainWindow();
-      f.Bind(this.Project);
-      f.Show();
+
       this.Close();
+    }
+
+    private void Window_Closed(object sender, EventArgs e)
+    {
+      new MainWindow(this.Project).Show();
+    }
+
+    private void lblDisplayTitle_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+      Label label = (Label)sender;
+      string tag = (string)label.Tag;
+      AddonInfo addonInfo = this.Project.Addons.Single(q => q.Addon.Folder == tag);
+      UpdateCustomTitle(addonInfo);
+
+    }
+
+    private void lblTag_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+      Label label = (Label)sender;
+      string tag = (string)label.Tag;
+      AddonInfo addonInfo = this.Project.Addons.Single(q => q.Addon.Folder == tag);
+      UpdateTags(addonInfo);
     }
   }
 }

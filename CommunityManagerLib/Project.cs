@@ -24,7 +24,7 @@ namespace CommunityManagerLib
     {
       issues = new();
       var s = LoadSettings(ref issues);
-      var a = string.IsNullOrEmpty(s.CommunityFolderPath)
+      var a = string.IsNullOrEmpty(s.CommunityFolderPath) == false
         ? LoadAddons(s.CommunityFolderPath, ADDONS_FILE, ref issues)
         : new();
       var p = LoadPrograms(ref issues);
@@ -46,7 +46,9 @@ namespace CommunityManagerLib
       BindingList<AddonInfo> ret;
       try
       {
-        Dictionary<string, State> stateDict = Project.Deserialize<Dictionary<string, State>>(ADDONS_FILE);
+        Dictionary<string, State> stateDict = System.IO.File.Exists(ADDONS_FILE)
+          ? Project.Deserialize<Dictionary<string, State>>(ADDONS_FILE)
+          : new Dictionary<string, State>();
         ret = scanner.CreateAddonInfos(
             communityFolder, stateDict);
       }
@@ -202,6 +204,29 @@ namespace CommunityManagerLib
     {
       List<string> issues = new();
       this.Programs = Project.LoadPrograms(ref issues);
+    }
+
+    public void ReloadSettings()
+    {
+      List<string> issues = new();
+      this.Settings = Project.LoadSettings(ref issues);
+    }
+
+    public void SaveSettings()
+    {
+      Serialize(this.Settings, SETTINGS_FILE);
+    }
+
+    public static Project CreateEmpty()
+    {
+      Project ret = new Project()
+      {
+        Addons = new(),
+        Programs = new(),
+        Settings = new(),
+        StartupConfigurations = new()
+      };
+      return ret;
     }
 
     private Project() { }

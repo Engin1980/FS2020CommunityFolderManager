@@ -33,10 +33,7 @@
       <DockPanel Grid.Row="0" Grid.Column="1" >
         <Button x:Name="btnBrowseCommunityFolder" DockPanel.Dock="Right" Content="(...)" 
                 Click="btnBrowseCommunityFolder_Click" />
-        <TextBox Text="{Binding CommunityFolderPath}" />
-      </DockPanel>
-      <DockPanel Grid.Row="1" Grid.Column="1" >
-        <TextBox Text="{Binding CommunityFolderPath}" />
+        <TextBox Text="{Binding CommunityFolderPath}" IsReadOnly="True" IsReadOnlyCaretVisible="True" />
       </DockPanel>
     </Grid>
   </DockPanel>

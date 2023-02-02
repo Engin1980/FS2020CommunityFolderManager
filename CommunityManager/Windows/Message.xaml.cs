@@ -43,7 +43,7 @@ namespace CommunityManager.Windows
       InitializeComponent();
     }
 
-    public void Bind(Data data)
+    public Message(Data data):this()
     {
       this.DataContext = data ?? throw new ArgumentNullException(nameof(data));
     }
@@ -57,10 +57,8 @@ namespace CommunityManager.Windows
 
     public static DialogResult ShowDialog(string title, string prompt, params DialogResult[] availableResults)
     {
-      Data data = new Data(title, prompt, availableResults);
-      Message message = new Message();
-      message.Bind(data);
-      message.ShowDialog();
+      Data data = new(title, prompt, availableResults);
+      new Message(data).ShowDialog();
       return data.DialogResult;
     }
   }

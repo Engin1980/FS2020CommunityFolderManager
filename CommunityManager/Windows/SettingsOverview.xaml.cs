@@ -2,6 +2,8 @@
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +18,7 @@ using System.Windows.Shapes;
 
 namespace CommunityManager.Windows
 {
+
   /// <summary>
   /// Interaction logic for SettingsOverview.xaml
   /// </summary>
@@ -28,7 +31,7 @@ namespace CommunityManager.Windows
       InitializeComponent();
     }
 
-    public void Bind(Project project)
+    public SettingsOverview(Project project) : this()
     {
       this.Project = project;
       this.Project.Settings.PropertyChanged += Settings_PropertyChanged;
@@ -65,7 +68,7 @@ namespace CommunityManager.Windows
 
     private void btnClose_Click(object sender, RoutedEventArgs e)
     {
-      
+
       this.Close();
     }
 
@@ -78,7 +81,7 @@ namespace CommunityManager.Windows
     {
       CommonOpenFileDialog dialog = new()
       {
-        IsFolderPicker=true,
+        IsFolderPicker = true,
         InitialDirectory = Project.Settings.CommunityFolderPath
       };
       if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
@@ -99,9 +102,7 @@ namespace CommunityManager.Windows
         }
       }
 
-      var f = new MainWindow();
-      f.Bind(this.Project);
-      f.Show();
+      new MainWindow(this.Project).Show();
     }
   }
 }

@@ -5,8 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CommunityManager.Windows"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="{Binding WindowHeight,FallbackValue=250}" Width="{Binding WindowWidth,FallbackValue=400}">
+        Title="{Binding Title}" Height="{Binding WindowHeight}" Width="{Binding WindowWidth}">
   <DockPanel>
+    <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+      <Label Content="{Binding WindowHeight}" />
+      <Label Content=" x " />
+      <Label Content="{Binding WindowWidth}" />
+    </StackPanel>
     <DockPanel DockPanel.Dock="Bottom" LastChildFill="False">
       <ItemsControl ItemsSource="{Binding AvailableDialogResults}">
         <ItemsControl.ItemsPanel>

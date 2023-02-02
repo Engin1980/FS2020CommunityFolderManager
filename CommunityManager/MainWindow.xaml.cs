@@ -31,6 +31,11 @@ namespace CommunityManager
       InitializeComponent();
     }
 
+    public MainWindow(Project? project) : this()
+    {
+      this.Project = project;
+    }
+
     private void btnQuit_Click(object sender, RoutedEventArgs e)
     {
       Application.Current.Shutdown();
@@ -38,47 +43,42 @@ namespace CommunityManager
 
     private void btnAddonOverview_Click(object sender, RoutedEventArgs e)
     {
-      var f = new AddonOverview();
-      f.Bind(Project);
-      f.Show();
+      new AddonOverview(Project).Show();
       this.Hide();
     }
 
-    public void Bind(Project project)
-    {
-      this.Project = project;
-    }
-
-    private void Window_Loaded(object sender, RoutedEventArgs e)
+    private void LoadProject()
     {
       var p = Project.Load(out List<string> issues);
       if (issues.Count > 0)
       {
         string prompt = "There were issues during the app startup:\n\n" +
-          string.Join("\n\n *)\t", issues);
-        var d = new Message.Data("Issues during start up.", prompt, Types.DialogResult.Ok)
+          string.Join("\n\n", issues.Select(q => "\t(*) " + q).ToList());
+        var d = new Message.Data("FS2020 Community Manager ... Issues during start up.", prompt, Types.DialogResult.Ok)
         {
           WindowHeight = 400,
           WindowWidth = 600
         };
-        var f = new Message();
-        f.Bind(d);
         this.Hide();
-        f.ShowDialog();
-        f.Focus();
+        new Message(d).ShowDialog();
         this.Show();
-        if (p == null)
-          p = Project.CreateEmpty();
+        p ??= Project.CreateEmpty();
       }
 
-      this.Bind(p);
+      this.Project = p;
+    }
+
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+      if (this.Project == null)
+      {
+        LoadProject();
+      }
     }
 
     private void btnSettings_Click(object sender, RoutedEventArgs e)
     {
-      var f = new SettingsOverview();
-      f.Bind(Project);
-      f.Show();
+      new SettingsOverview(Project).Show();
       this.Hide();
     }
   }

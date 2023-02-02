@@ -47,7 +47,7 @@ namespace CommunityManager.Windows
       InitializeComponent();
     }
 
-    public void Bind(Data data)
+    public TagEditor(Data data):this()
     {
       this.DataContext = data ?? throw new ArgumentNullException(nameof(data));
     }

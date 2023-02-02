@@ -55,11 +55,13 @@ namespace CommunityManager.Windows
     }
 
     private void btnClose_Click(object sender, RoutedEventArgs e)
-    {
-      var f = new MainWindow();
-      f.Bind(this.Project);
-      f.Show();
+    {      
       this.Close();
+    }
+
+    private void Window_Closed(object sender, EventArgs e)
+    {
+      new MainWindow(this.Project).Show();
     }
   }
 }

@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace CommunityManagerLib
 {
-  public class NotifyPropertyChangedBase
+  public class NotifyPropertyChangedBase : INotifyPropertyChanged
   {
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    private Dictionary<string, object?> propertyValues = new();
+    private readonly Dictionary<string, object?> propertyValues = new();
 
     protected T? GetProperty<T>(string propertyName)
     {

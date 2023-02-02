@@ -37,7 +37,7 @@ namespace CommunityManagerLib.Addons
 
     public State()
     {
-      Tags = new() { "new" };
+      Tags = new();
     }
   }
 }
