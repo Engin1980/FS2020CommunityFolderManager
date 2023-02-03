@@ -10,7 +10,7 @@
   <UserControl.Resources>
     <converters:TagToBackgroundConverter x:Key="TagToBackgroundConverter" />
   </UserControl.Resources>
-  <StackPanel x:Name="pnlTags" Orientation="Horizontal" Margin="32 0 0 0">
+  <StackPanel x:Name="pnlTags" Orientation="Horizontal">
     <ItemsControl ItemsSource="{Binding}" >
       <ItemsControl.ItemsPanel>
         <ItemsPanelTemplate>

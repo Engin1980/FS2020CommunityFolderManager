@@ -6,32 +6,24 @@
         xmlns:local="clr-namespace:CommunityManager"
         mc:Ignorable="d"
         Title="MainWindow" Height="550" Width="800" Loaded="Window_Loaded">
-  <DockPanel LastChildFill="False">
-    <Label DockPanel.Dock="Top" FontWeight="Bold" FontSize="24" HorizontalAlignment="Center">
+  <DockPanel>
+    <Label DockPanel.Dock="Top" HorizontalAlignment="Center">
       <Label.Content>
-        MSFS2020 Community Folder &amp; Program Manager
+        <TextBlock FontSize="24" FontWeight="Bold">
+          MSFS2020 Community Folder &amp; Program Manager
+        </TextBlock>
       </Label.Content>
     </Label>
+    <StackPanel DockPanel.Dock="Bottom">
+      <Button x:Name="btnAddonOverview" Margin="32 8 32 8" Padding="8" Content="Addon Management" DockPanel.Dock="Top" Click="btnAddonOverview_Click" />
+      <Button x:Name="btnProgramOverview" Margin="32 8 32 8" Padding="8" Content="Program Management" DockPanel.Dock="Top" Click="btnProgramOverview_Click" />
+      <Button x:Name="btnStartupConfigOverview" Margin="32 8 32 8" Padding="8" Content="Startup Configurations" DockPanel.Dock="Top" Click="btnStartupConfigOverview_Click" />
+      <Button x:Name="btnSettings" Margin="32 8 32 8" Padding="8" Content="Settings" DockPanel.Dock="Top" Click="btnSettings_Click" />
+      <Button x:Name="btnQuit"  Margin="32 8 32 8" Padding="8" Content="Quit" DockPanel.Dock="Top" Click="btnQuit_Click" />
+    </StackPanel>
     <GroupBox Header="Startup sets" Margin="32 8 32 8" DockPanel.Dock="Top" >
-      <Grid>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition />
-          <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-          <RowDefinition />
-          <RowDefinition />
-        </Grid.RowDefinitions>
-        <Button Grid.Column="0" Grid.Row="0" Content="Start" Margin="16" />
-        <Button Grid.Column="0" Grid.Row="1" Content="Start" Margin="16" />
-        <Button Grid.Column="1" Grid.Row="0" Content="Start" Margin="16" />
-        <Button Grid.Column="1" Grid.Row="1" Content="Start" Margin="16" />
+      <Grid x:Name="grd">
       </Grid>
     </GroupBox>
-    <Button x:Name="btnAddonOverview" Margin="32 8 32 8" Padding="8" Content="Addon Management" DockPanel.Dock="Top" Click="btnAddonOverview_Click" />
-    <Button x:Name="btnProgramOverview" Margin="32 8 32 8" Padding="8" Content="Program Management" DockPanel.Dock="Top" Click="btnProgramOverview_Click" />
-    <Button x:Name="btnStartupConfigOverview" Margin="32 8 32 8" Padding="8" Content="Startup Configurations" DockPanel.Dock="Top" />
-    <Button x:Name="btnSettings" Margin="32 8 32 8" Padding="8" Content="Settings" DockPanel.Dock="Top" Click="btnSettings_Click" />
-    <Button x:Name="btnQuit"  Margin="32 8 32 8" Padding="8" Content="Quit" DockPanel.Dock="Top" Click="btnQuit_Click" />
   </DockPanel>
 </Window>

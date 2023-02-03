@@ -166,6 +166,11 @@ namespace CommunityManagerLib
       Serialize(this.Programs.ToList(), PROGRAM_FILE);
     }
 
+    public void SaveStartupConfigurations()
+    {
+      Serialize(this.StartupConfigurations.ToList(), STARTUP_CONFIGURATIONS_FILE);
+    }
+
     private void Serialize<T>(T obj, string fileName)
     {
       var txt = JsonConvert.SerializeObject(obj, Formatting.Indented);
@@ -206,6 +211,12 @@ namespace CommunityManagerLib
       this.Programs = Project.LoadPrograms(ref issues);
     }
 
+    public void ReloadStartupConfigurations()
+    {
+      List<string> issues = new();
+      this.StartupConfigurations = Project.LoadStartupConfigurations(ref issues);
+    }
+
     public void ReloadSettings()
     {
       List<string> issues = new();
@@ -226,6 +237,22 @@ namespace CommunityManagerLib
         Settings = new(),
         StartupConfigurations = new()
       };
+      return ret;
+    }
+
+    public List<string> GetAllTags()
+    {
+      List<string> ret =
+        this.Addons
+        .SelectMany(q => q.State.Tags)
+        .Union(
+          this.Programs.SelectMany(p => p.Tags))
+        .Union(
+          this.StartupConfigurations.SelectMany(p => p.Tags))
+        .Distinct()
+        .OrderBy(q => q)
+        .ToList();
+
       return ret;
     }
 

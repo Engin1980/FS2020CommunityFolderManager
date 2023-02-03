@@ -9,15 +9,19 @@ namespace CommunityManagerLib.StartupConfigurations
 {
   public class StartupConfiguration : NotifyPropertyChangedBase
   {
+    public StartupConfiguration()
+    {
+      this.Tags = new();
+    }
     public string Title
     {
       get => base.GetProperty<string>(nameof(Title))!;
       set => base.UpdateProperty(nameof(Title), value);
     }
 
-    public BindingList<string> Tags
+    public List<string> Tags
     {
-      get => base.GetProperty<BindingList<string>>(nameof(Tags))!;
+      get => base.GetProperty<List<string>>(nameof(Tags))!;
       set => base.UpdateProperty(nameof(Tags), value);
     }
   }

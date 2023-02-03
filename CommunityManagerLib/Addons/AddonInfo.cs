@@ -41,7 +41,7 @@ namespace CommunityManagerLib.Addons
         if (string.IsNullOrWhiteSpace(Addon.Creator))
         {
           if (string.IsNullOrWhiteSpace(Addon.Manufacturer))
-            ret = "?";
+            ret = "";
           else
             ret = Addon.Manufacturer;
         }

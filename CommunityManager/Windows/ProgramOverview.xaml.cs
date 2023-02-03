@@ -6,6 +6,8 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -75,14 +77,14 @@ namespace CommunityManager.Windows
     {
       CommonOpenFileDialog dialog = new()
       {
-        DefaultExtension = ".exe",
         EnsureFileExists = true,
         EnsurePathExists = true,
         Multiselect = false,
         Title = "Select executable file..."
       };
-      dialog.Filters.Add(new CommonFileDialogFilter("Executable file (*.exe)", "exe"));
-      dialog.Filters.Add(new CommonFileDialogFilter("All files (*.*)", "*"));
+      dialog.Filters.Add(new CommonFileDialogFilter("Executable file", "exe"));
+      dialog.Filters.Add(new CommonFileDialogFilter("Batch file", "bat"));
+      dialog.Filters.Add(new CommonFileDialogFilter("All files", "*"));
       var res = dialog.ShowDialog();
       if (res != CommonFileDialogResult.Ok) return;
 
@@ -94,7 +96,7 @@ namespace CommunityManager.Windows
     {
       var path = (string)((Label)sender).Tag;
       Program program = Project.Programs.Single(q => q.Path == path);
-      UpdateCustomTitle(program);      
+      UpdateCustomTitle(program);
     }
 
     private void UpdateCustomTitle(Program program)
@@ -119,14 +121,16 @@ namespace CommunityManager.Windows
       TagPanel panel = (TagPanel)sender;
       string tag = (string)panel.Tag;
       Program program = this.Project.Programs.Single(q => q.Path == tag);
-      UpdateTags(program);
+      UpdateTags(new List<Program>() { program });
     }
 
-    private void UpdateTags(Program program)
+    private void UpdateTags(List<Program> programs)
     {
-      var tmp = (BindingList<Program>)this.DataContext!;
+      Trace.Assert(programs.Count > 0);
+
+      var tmp = (BindingList<AddonInfo>)this.DataContext!;
       BindingList<TagEditor.CheckItem> tags = Project.GetAllTags()
-        .Select(q => new TagEditor.CheckItem(q, program.Tags.Contains(q)))
+        .Select(q => new TagEditor.CheckItem(q, programs.First().Tags.Contains(q)))
         .ToBindingList();
 
       TagEditor.Data data = new()
@@ -136,7 +140,8 @@ namespace CommunityManager.Windows
       new TagEditor(data).ShowDialog();
       if (data.DialogResult == Types.DialogResult.Cancel) return;
 
-      program.Tags = data.Tags.Where(q => q.IsChecked).Select(q => q.Label).ToList();
+      var newTags = data.Tags.Where(q => q.IsChecked).Select(q => q.Label);
+      programs.ForEach(q => q.Tags = newTags.ToList());
       int selectedIndex = lstPrograms.SelectedIndex;
       lstPrograms.DataContext = null;
       lstPrograms.DataContext = this.DataContext; //TODO improve how here reset of binding is done
@@ -155,7 +160,30 @@ namespace CommunityManager.Windows
     {
       if (lstPrograms.SelectedIndex < 0) return;
       Program program = (Program)lstPrograms.SelectedItem;
-      UpdateTags(program);
+      UpdateTags(new List<Program>() { program });
+    }
+
+    private void txtStartupDelay_TextChanged(object sender, TextChangedEventArgs e)
+    {
+      TextBox txt = (TextBox)sender;
+      bool fail = false;
+      fail = int.TryParse(txt.Text, out int val) == false;
+      fail |= val < 0;
+      txt.Background = new SolidColorBrush(
+        fail ? Colors.Red : SystemColors.WindowColor);
+    }
+
+    private void btnDelete_Click(object sender, RoutedEventArgs e)
+    {
+      if (Message.ShowDialog(
+        "Delete confirmation",
+        "Really delete all selected programs?",
+        Types.DialogResult.Yes, Types.DialogResult.No) == Types.DialogResult.No) return;
+
+      lstPrograms.SelectedItems
+        .Cast<Program>()
+        .ToList()
+        .ForEach(q => Project.Programs.Remove(q));
     }
   }
 }

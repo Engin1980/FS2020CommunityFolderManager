@@ -32,7 +32,11 @@
       <ListBox.ItemTemplate>
         <DataTemplate>
           <StackPanel Background="{Binding Label, Converter={StaticResource TagToBackgroundConverter}}" HorizontalAlignment="Stretch">
-            <CheckBox Content="{Binding Label}" IsChecked="{Binding IsChecked}" Margin="8 4" HorizontalContentAlignment="Stretch" />
+            <CheckBox IsChecked="{Binding IsChecked}" Margin="8 4" HorizontalContentAlignment="Stretch">
+              <CheckBox.Content>
+                <TextBlock Text="{Binding Label}" />
+              </CheckBox.Content>
+            </CheckBox>
           </StackPanel>
         </DataTemplate>
       </ListBox.ItemTemplate>

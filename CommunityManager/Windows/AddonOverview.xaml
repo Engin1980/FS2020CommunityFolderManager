@@ -5,24 +5,30 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CommunityManager.Windows"
         xmlns:controls="clr-namespace:CommunityManager.Controls"
+        xmlns:converters="clr-namespace:CommunityManager.Converters"
         mc:Ignorable="d"
         Title="AddonOverview" Height="450" Width="800" Loaded="Window_Loaded" Closed="Window_Closed">
+  <Window.Resources>
+    <converters:PositiveIntToBoolConverter x:Key="PositiveIntToBoolConverter"/>
+    <converters:NonemptyStringToVisibilityConverter x:Key="NonemptyStringToVisibilityConverter" />
+    <converters:ObjectNotNullToBoolConverter x:Key="ObjectNotNullToBoolConverter" />
+  </Window.Resources>
   <DockPanel>
     <DockPanel>
       <DockPanel DockPanel.Dock="Top" LastChildFill="False">
-        <Button x:Name="btnCustomTitle" DockPanel.Dock="Left" Template="{StaticResource ButtonStyle}" 
-                    Content="Custom Title" Click="btnCustomTitle_Click" />
-        <Button x:Name="btnAssignTags"  DockPanel.Dock="Left" Template="{StaticResource ButtonStyle}" 
-                    Content="Assing Tags" Click="btnAssignTags_Click"/>
+        <Button x:Name="btnCustomTitle" DockPanel.Dock="Left" 
+                Content="Title" Click="btnCustomTitle_Click" 
+                IsEnabled="{Binding SelectedItem, ElementName=lstAddonStates, Converter={StaticResource ObjectNotNullToBoolConverter}}" />
 
-        <Button x:Name="btnClose" Content="Close" DockPanel.Dock="Right" Margin="2"  Padding="8" 
-                Template="{StaticResource ButtonStyle}" 
-              Click="btnClose_Click"/>
-        <Button x:Name="btnSave" Content="Save" DockPanel.Dock="Right" Margin="2"  Padding="8" 
-                Template="{StaticResource ButtonStyle}" 
+        <Button x:Name="btnAssignTags"  DockPanel.Dock="Left" 
+                Content="Tags" Click="btnAssignTags_Click"             
+                IsEnabled="{Binding SelectedItem, ElementName=lstAddonStates, Converter={StaticResource ObjectNotNullToBoolConverter}}" />
+
+        <Button x:Name="btnClose" Content="Close" DockPanel.Dock="Right" 
+                Click="btnClose_Click"/>
+        <Button x:Name="btnSave" Content="Save" DockPanel.Dock="Right" 
               Click="btnSave_Click"/>
-        <Button x:Name="btnLoad" Content="Reload" DockPanel.Dock="Right" Margin="2" Padding="8"  
-                Template="{StaticResource ButtonStyle}" 
+        <Button x:Name="btnLoad" Content="Reload" DockPanel.Dock="Right" 
               Click="btnLoad_Click"/>
       </DockPanel>
       <ListView x:Name="lstAddonStates" ItemsSource="{Binding}">
@@ -36,39 +42,26 @@
         <ListView.ItemTemplate>
           <DataTemplate>
             <StackPanel>
-              <StackPanel Margin="8" Orientation="Horizontal">
-                <TextBlock>
-                  <Label x:Name="lblDisplayTitle"  FontWeight="Bold"
-                          MouseDoubleClick="lblDisplayTitle_MouseDoubleClick" Margin="0" Padding="0"
-                          Tag="{Binding Addon.Folder}" >
-                    <Label.Content>
-                      <TextBlock Text="{Binding DisplayTitle}"/>
-                    </Label.Content>
-                  </Label>
-                  <Label Margin="0" Padding="0">
-                    <Label.Content>
-                      <StackPanel Orientation="Horizontal">
-                        <TextBlock Text=" .\" />
-                        <TextBlock Text="{Binding Addon.Folder}" />  
-                      </StackPanel>
-                    </Label.Content>
-                  </Label>
-                  <Label Margin="8 0 0 0" Padding="0">
-                    <Label.Content>
-                      <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="from" />
-                        <TextBlock Text="{Binding DisplayCreator}" />
-                      </StackPanel>
-                      </Label.Content>
-                  </Label>
-                </TextBlock>
+              <Label x:Name="lblDisplayTitle" 
+                     MouseDoubleClick="lblDisplayTitle_MouseDoubleClick"
+                     Tag="{Binding Addon.Folder}">
+                <Label.Content>
+                  <TextBlock  FontWeight="Bold" FontSize="20" Text="{Binding DisplayTitle}" />
+                </Label.Content>
+              </Label>
+              <StackPanel Orientation="Horizontal" Margin="16 4 4 4">
+                <TextBlock Text=".\" />
+                <TextBlock Text="{Binding Addon.Folder}" />
               </StackPanel>
-
+              <StackPanel Orientation="Horizontal" Margin="16 4 4 4" 
+                          Visibility="{Binding DisplayCreator, Converter={StaticResource NonemptyStringToVisibilityConverter}}" >
+                <TextBlock Text="by " />
+                <TextBlock Text="{Binding DisplayCreator}" />
+              </StackPanel>
               <controls:TagPanel  
                 Tag="{Binding Path=DataContext.Addon.Folder, RelativeSource={RelativeSource AncestorType=StackPanel}}" 
                 DataContext="{Binding State.Tags}"
-                MouseDoubleClick="TagPanel_MouseDoubleClick" Margin="32 0 0 0"/>
-
+                MouseDoubleClick="TagPanel_MouseDoubleClick" Margin="16 4 4 4"/>
             </StackPanel>
           </DataTemplate>
         </ListView.ItemTemplate>

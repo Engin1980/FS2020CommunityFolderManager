@@ -21,8 +21,22 @@ namespace CommunityManagerLib.Programs
 
     private void Program_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-      if (e.PropertyName == "Path")
+      if (e.PropertyName == nameof(Path))
         base.InvokePropertyChanged(nameof(FileName));
+      else if (e.PropertyName == nameof(FileName) || e.PropertyName == nameof(CustomName))
+        base.InvokePropertyChanged(nameof(DisplayTitle));
+    }
+
+    public string? CustomName
+    {
+      get => base.GetProperty<string>(nameof(CustomName));
+      set => base.UpdateProperty(nameof(CustomName), value);
+    }
+
+    [JsonIgnore]
+    public string DisplayTitle
+    {
+      get => CustomName ?? FileName;
     }
 
     public string Path

@@ -5,26 +5,30 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CommunityManager.Windows"
         xmlns:controls="clr-namespace:CommunityManager.Controls"
+        xmlns:converters="clr-namespace:CommunityManager.Converters"
         mc:Ignorable="d"
         Title="ProgramOverview" Height="450" Width="800" Closed="Window_Closed">
+  <Window.Resources>
+    <converters:PositiveIntToBoolConverter x:Key="PositiveIntToBoolConverter"/>
+  </Window.Resources>
   <DockPanel>
     <DockPanel DockPanel.Dock="Top" LastChildFill="False">
-      <Button x:Name="btnAdd" DockPanel.Dock="Left" Template="{StaticResource ButtonStyle}" 
-                    Content="Add program" Click="btnAdd_Click"  />
-      <Button x:Name="btnCustomTitle" DockPanel.Dock="Left" Template="{StaticResource ButtonStyle}" 
-                    Content="Custom title" Click="btnCustomTitle_Click" />
-      <Button x:Name="btnTags" DockPanel.Dock="Left" Template="{StaticResource ButtonStyle}" 
-                    Content="Edit tags" Click="btnTags_Click" />
-      <Button x:Name="btnDelete"  DockPanel.Dock="Left" Template="{StaticResource ButtonStyle}" 
-                    Content="Delete program" />
+      <Button x:Name="btnAdd" DockPanel.Dock="Left"
+                    Content="Add" Click="btnAdd_Click"  />
+      <Button x:Name="btnCustomTitle" DockPanel.Dock="Left" 
+              Content="Title" Click="btnCustomTitle_Click" 
+              IsEnabled="{Binding Items.Count, ElementName=lstPrograms, Converter={StaticResource PositiveIntToBoolConverter}}" />
+      <Button x:Name="btnTags" DockPanel.Dock="Left"
+              Content="Tags" Click="btnTags_Click"
+              IsEnabled="{Binding Items.Count, ElementName=lstPrograms, Converter={StaticResource PositiveIntToBoolConverter}}" />
+      <Button x:Name="btnDelete"  DockPanel.Dock="Left"
+              Content="Delete" Click="btnDelete_Click" 
+              IsEnabled="{Binding Items.Count, ElementName=lstPrograms, Converter={StaticResource PositiveIntToBoolConverter}}" />
       <Button x:Name="btnClose" Content="Close" DockPanel.Dock="Right" 
-              Template="{StaticResource ButtonStyle}" 
               Click="btnClose_Click"/>
       <Button x:Name="btnSave" Content="Save" DockPanel.Dock="Right" 
-              Template="{StaticResource ButtonStyle}" 
               Click="btnSave_Click"/>
       <Button x:Name="btnLoad" Content="Reload" DockPanel.Dock="Right" 
-              Template="{StaticResource ButtonStyle}" 
               Click="btnLoad_Click"/>
     </DockPanel>
     <ListView x:Name="lstPrograms" ItemsSource="{Binding}">
@@ -38,9 +42,19 @@
       <ListView.ItemTemplate>
         <DataTemplate>
           <StackPanel>
-            <Label x:Name="lblName" Content="{Binding DisplayTitle}" FontWeight="Bold" MouseDoubleClick="lblName_MouseDoubleClick" />
-            <TextBlock Text="{Binding Path=Path}" Margin="32 0 0 0" />
-            <controls:TagPanel DataContext="{Binding Tags}" Margin="32 0 0 0" MouseDoubleClick="TagPanel_MouseDoubleClick" />
+            <Label x:Name="lblName" Content="{Binding DisplayTitle}" Tag="{Binding Path}" FontWeight="Bold" MouseDoubleClick="lblName_MouseDoubleClick" />
+            <TextBlock Text="{Binding Path}" Margin="32 4 4 4" />
+            <StackPanel Orientation="Horizontal" Margin="32 4 4 4">
+              <TextBlock Text="Delay "/>
+              <TextBox x:Name="txtStartupDelay"   Width="32" TextAlignment="Right"
+                       Text="{Binding StartupDelay, UpdateSourceTrigger=PropertyChanged}" 
+                       TextChanged="txtStartupDelay_TextChanged" />
+              <TextBlock Text=" sec"/>
+            </StackPanel>
+            <controls:TagPanel 
+              Tag="{Binding Path=DataContext.Path, RelativeSource={RelativeSource AncestorType=StackPanel}}" 
+              DataContext="{Binding Tags}"
+              Margin="32 4 4 4" MouseDoubleClick="TagPanel_MouseDoubleClick" />
           </StackPanel>
         </DataTemplate>
       </ListView.ItemTemplate>

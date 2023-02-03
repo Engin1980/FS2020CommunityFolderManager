@@ -4,6 +4,7 @@ using CommunityManagerLib.Addons;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -85,14 +86,23 @@ namespace CommunityManager.Windows
     {
       if (lstAddonStates.SelectedItem is not AddonInfo addonInfo) return;
 
-      UpdateTags(addonInfo);
+      var addonInfos = lstAddonStates.SelectedItems.Cast<AddonInfo>().ToList();
+      if (addonInfos.Count > 1)
+        if (Message.ShowDialog(
+          "Adjust multiple items?",
+          $"There are {addonInfos.Count} items selected. Adjust tags to all of them?",
+          Types.DialogResult.Yes, Types.DialogResult.Cancel) == Types.DialogResult.Cancel) return;
+
+      UpdateTags(addonInfos);
     }
 
-    private void UpdateTags(AddonInfo addonInfo)
+    private void UpdateTags(List<AddonInfo> addonInfos)
     {
+      Trace.Assert(addonInfos.Count > 0);
+
       var tmp = (BindingList<AddonInfo>)this.DataContext!;
       BindingList<TagEditor.CheckItem> tags = Project.GetAllTags()
-        .Select(q => new TagEditor.CheckItem(q, addonInfo.State.Tags.Contains(q)))
+        .Select(q => new TagEditor.CheckItem(q, addonInfos.First().State.Tags.Contains(q)))
         .ToBindingList();
 
       TagEditor.Data data = new()
@@ -102,7 +112,8 @@ namespace CommunityManager.Windows
       new TagEditor(data).ShowDialog();
       if (data.DialogResult == Types.DialogResult.Cancel) return;
 
-      addonInfo.State.Tags = data.Tags.Where(q => q.IsChecked).Select(q => q.Label).ToList();
+      var newTags = data.Tags.Where(q => q.IsChecked).Select(q => q.Label);
+      addonInfos.ForEach(q => q.State.Tags = newTags.ToList());
       int selectedIndex = lstAddonStates.SelectedIndex;
       lstAddonStates.DataContext = null;
       lstAddonStates.DataContext = this.DataContext; //TODO improve how here reset of binding is done
@@ -143,8 +154,9 @@ namespace CommunityManager.Windows
     {
       TagPanel panel = (TagPanel)sender;
       string tag = (string)panel.Tag;
-      AddonInfo addonInfo = this.Project.Addons.Single(q => q.Addon.Folder == tag);
-      UpdateTags(addonInfo);
+      var addonInfos = this.Project.Addons.Where(q => q.Addon.Folder == tag).ToList();
+      Trace.Assert(addonInfos.Count == 1);
+      UpdateTags(addonInfos);
     }
   }
 }
