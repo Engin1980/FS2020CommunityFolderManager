@@ -79,6 +79,8 @@ namespace CommunityManager
     {
       Button btn = (Button)sender;
       StartupConfiguration sc = (StartupConfiguration)btn.Tag;
+      new Windows.Run(Project, sc).Show();
+      this.Hide();
     }
 
     private void StartupConfigurations_ListChanged(object? sender, ListChangedEventArgs e)

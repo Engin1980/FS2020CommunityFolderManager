@@ -51,6 +51,11 @@
                        TextChanged="txtStartupDelay_TextChanged" />
               <TextBlock Text=" sec"/>
             </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="32 4 4 4">
+              <TextBlock Text="Args "/>
+              <TextBox x:Name="txtArguments" Width="512"
+                       Text="{Binding Arguments, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
             <controls:TagPanel 
               Tag="{Binding Path=DataContext.Path, RelativeSource={RelativeSource AncestorType=StackPanel}}" 
               DataContext="{Binding Tags}"

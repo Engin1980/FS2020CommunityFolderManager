@@ -12,6 +12,7 @@ namespace CommunityManagerLib.Programs
     public Program(string path)
     {
       this.Path = path;
+      this.Arguments = "";
       this.Tags = new();
       this.PropertyChanged += Program_PropertyChanged;
     }
@@ -39,10 +40,23 @@ namespace CommunityManagerLib.Programs
       get => CustomName ?? FileName;
     }
 
+    [JsonIgnore]
+    public string DisplayTitleWithArguments
+    {
+      get => CustomName ?? FileName + " " + Arguments;
+    }
+
     public string Path
     {
       get => base.GetProperty<string>(nameof(Path))!;
       set => base.UpdateProperty(nameof(Path), value);
+    }
+
+
+    public string Arguments
+    {
+      get => base.GetProperty<string>(nameof(Arguments))!;
+      set => base.UpdateProperty(nameof(Arguments), value);
     }
 
     public int StartupDelay

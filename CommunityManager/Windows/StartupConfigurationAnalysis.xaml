@@ -1,0 +1,99 @@
+﻿<Window x:Class="CommunityManager.Windows.StartupConfigurationAnalysis"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CommunityManager.Windows"
+        xmlns:controls="clr-namespace:CommunityManager.Controls"
+        mc:Ignorable="d"
+        Title="StartupConfigurationAnalysis" Height="450" Width="800">
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition/>
+      <ColumnDefinition/>
+    </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+      <RowDefinition />
+      <RowDefinition />
+    </Grid.RowDefinitions>
+
+    <DockPanel Grid.Row="0" Grid.Column="0">
+      <Label  DockPanel.Dock="Top" FontWeight="Bold">Included Addons</Label>
+      <ScrollViewer>
+        <ItemsControl x:Name="lstIncludedAddons">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <StackPanel>
+                <Label Content="{Binding DisplayTitle}" />
+                <controls:TagPanel DataContext="{Binding State.Tags}" />
+              </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+    </DockPanel>
+
+    <DockPanel Grid.Row="0" Grid.Column="1">
+      <Label DockPanel.Dock="Top"  FontWeight="Bold">Excluded Addons</Label>
+      <ListView x:Name="lstExcludedAddons">
+        <ListView.Template>
+          <ControlTemplate>
+            <ScrollViewer>
+              <ItemsPresenter></ItemsPresenter>
+            </ScrollViewer>
+          </ControlTemplate>
+        </ListView.Template>
+        <ListView.ItemTemplate>
+          <DataTemplate>
+            <StackPanel>
+              <Label Content="{Binding DisplayTitle}" />
+              <controls:TagPanel DataContext="{Binding State.Tags}" />
+            </StackPanel>
+          </DataTemplate>
+        </ListView.ItemTemplate>
+      </ListView>
+    </DockPanel>
+
+    <DockPanel Grid.Row="1" Grid.Column="0">
+      <Label DockPanel.Dock="Top" FontWeight="Bold">Included Programs</Label>
+      <ListView x:Name="lstIncludedPrograms">
+        <ListView.Template>
+          <ControlTemplate>
+            <ScrollViewer>
+              <ItemsPresenter></ItemsPresenter>
+            </ScrollViewer>
+          </ControlTemplate>
+        </ListView.Template>
+        <ListView.ItemTemplate>
+          <DataTemplate>
+            <StackPanel>
+              <Label Content="{Binding DisplayTitle}" />
+              <controls:TagPanel DataContext="{Binding State.Tags}" />
+            </StackPanel>
+          </DataTemplate>
+        </ListView.ItemTemplate>
+      </ListView>
+    </DockPanel>
+
+    <DockPanel Grid.Row="1" Grid.Column="1">
+      <Label DockPanel.Dock="Top" FontWeight="Bold">Included Programs</Label>
+      <ListView x:Name="lstExcludedPrograms">
+        <ListView.Template>
+          <ControlTemplate>
+            <ScrollViewer>
+              <ItemsPresenter></ItemsPresenter>
+            </ScrollViewer>
+          </ControlTemplate>
+        </ListView.Template>
+        <ListView.ItemTemplate>
+          <DataTemplate>
+            <StackPanel>
+              <Label Content="{Binding DisplayTitle}" />
+              <controls:TagPanel DataContext="{Binding State.Tags}" />
+            </StackPanel>
+          </DataTemplate>
+        </ListView.ItemTemplate>
+      </ListView>
+    </DockPanel>
+  </Grid>
+</Window>

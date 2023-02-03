@@ -13,9 +13,9 @@ using System.Windows;
 
 namespace CommunityManagerLib.Addons
 {
-  public class Scanner
+    public class Scanner
   {
-    private const string INACTIVE_ADDONS_FOLDER = "___inactive";
+    private const string INACTIVE_ADDONS_FOLDER = Settings.Settings.INACTIVE_ADDONS_SUBFOLDER;
 
 
     public BindingList<AddonInfo> CreateAddonInfos(string communityFolder, Dictionary<string, State> stateDict)
@@ -57,12 +57,13 @@ namespace CommunityManagerLib.Addons
       return ret.ToBindingList();
     }
 
-    public List<Addon> ScanAddons(string communityFolder)
+    private List<Addon> ScanAddons(string communityFolder)
     {
       List<Addon> ret = new();
       var dirs = System.IO.Directory.GetDirectories(communityFolder);
       foreach (var dir in dirs)
       {
+        if (System.IO.Path.GetFileName(dir) == INACTIVE_ADDONS_FOLDER) continue;
         Addon addon = ScanAddonManifestFile(dir);
         ret.Add(addon);
       }

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace CommunityManagerLib
 {
-  public class Project : NotifyPropertyChangedBase
+    public class Project : NotifyPropertyChangedBase
   {
     private const string SETTINGS_FILE = "data_config.json";
     private const string PROGRAM_FILE = "data_programs.json";
@@ -112,20 +112,20 @@ namespace CommunityManagerLib
       return ret.ToBindingList();
     }
 
-    public static Settings LoadSettings(ref List<string> issues)
+    public static Settings.Settings LoadSettings(ref List<string> issues)
     {
       var file = Path.GetFullPath(SETTINGS_FILE);
-      Settings ret;
+      Settings.Settings ret;
       if (File.Exists(file))
       {
         try
         {
-          ret = Deserialize<Settings>(file);
+          ret = Deserialize<Settings.Settings>(file);
         }
         catch (Exception ex)
         {
           issues.Add($"Failed to load {file}. Settings & Addon list will be empty. Error: {ex.Message}");
-          ret = new Settings()
+          ret = new Settings.Settings()
           {
             CommunityFolderPath = ""
           };
@@ -134,7 +134,7 @@ namespace CommunityManagerLib
       else
       {
         issues.Add($"'{file}' not found. Settings & Addon list will be empty.");
-        ret = new Settings()
+        ret = new Settings.Settings()
         {
           CommunityFolderPath = ""
         };
@@ -274,9 +274,9 @@ namespace CommunityManagerLib
       get => base.GetProperty<BindingList<StartupConfiguration>>(nameof(StartupConfigurations))!;
       set => base.UpdateProperty(nameof(StartupConfigurations), value);
     }
-    public Settings Settings
+    public Settings.Settings Settings
     {
-      get => base.GetProperty<Settings>(nameof(Settings))!;
+      get => base.GetProperty<Settings.Settings>(nameof(Settings))!;
       set => base.UpdateProperty(nameof(Settings), value);
     }
 

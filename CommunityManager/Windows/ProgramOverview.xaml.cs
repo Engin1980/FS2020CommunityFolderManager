@@ -128,7 +128,7 @@ namespace CommunityManager.Windows
     {
       Trace.Assert(programs.Count > 0);
 
-      var tmp = (BindingList<AddonInfo>)this.DataContext!;
+      var tmp = (BindingList<Program>)this.DataContext!;
       BindingList<TagEditor.CheckItem> tags = Project.GetAllTags()
         .Select(q => new TagEditor.CheckItem(q, programs.First().Tags.Contains(q)))
         .ToBindingList();
