@@ -6,18 +6,41 @@
         xmlns:local="clr-namespace:CommunityManager.Windows"
         mc:Ignorable="d"
         Title="SettingsOverview" Height="450" Width="800" Closed="Window_Closed">
-  <DockPanel>
+  <DockPanel Margin="16">
     <DockPanel DockPanel.Dock="Top">
       <DockPanel DockPanel.Dock="Top" LastChildFill="False">
-        <Button x:Name="btnClose" Content="Close" DockPanel.Dock="Right" 
+        <Button x:Name="btnClose" Content="Save &amp; Close" DockPanel.Dock="Right" 
               Click="btnClose_Click"/>
-        <Button x:Name="btnSave" Content="Save" DockPanel.Dock="Right" 
-              Click="btnSave_Click"/>
         <Button x:Name="btnLoad" Content="Reload" DockPanel.Dock="Right" 
               Click="btnLoad_Click"/>
       </DockPanel>
     </DockPanel>
-    <Grid Margin="8">
+    <DockPanel DockPanel.Dock="Bottom">
+      <Grid>
+        <Grid.RowDefinitions>
+          <RowDefinition />
+          <RowDefinition />
+          <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Label Content="Author" Grid.Row="0" Grid.Column="0" />
+        <Label Content="Marek Vajgl" Grid.Row="0" Grid.Column="1" />
+        <Label Content="Date" Grid.Row="1" Grid.Column="0" />
+        <Label Content="2023 - ..." Grid.Row="1" Grid.Column="1" />
+        <Label Content="WebSite" Grid.Row="2" Grid.Column="0"/>
+        <Label Grid.Row="2" Grid.Column="1">
+          <Label.Content>
+            <Hyperlink NavigateUri="https://github.com/Engin1980/FS2020CommunityFolderManager">
+              https://github.com/Engin1980/FS2020CommunityFolderManager
+            </Hyperlink>
+          </Label.Content>
+        </Label>
+      </Grid>
+    </DockPanel>
+    <Grid>
       <Grid.ColumnDefinitions>
         <ColumnDefinition />
         <ColumnDefinition />

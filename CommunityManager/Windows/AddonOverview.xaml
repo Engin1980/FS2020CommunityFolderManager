@@ -3,11 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CommunityManager.Windows"
+        xmlns:local="clr-namespace:CommunityManager.Windows"        
         xmlns:controls="clr-namespace:CommunityManager.Controls"
         xmlns:converters="clr-namespace:CommunityManager.Converters"
+        xmlns:specificConverters ="clr-namespace:CommunityManager.Converters.Specific"
         mc:Ignorable="d"
-        Title="AddonOverview" Height="450" Width="800" Loaded="Window_Loaded" Closed="Window_Closed">
+        Title="AddonOverview" Height="800" Width="800" Loaded="Window_Loaded" Closed="Window_Closed">
   <Window.Resources>
     <converters:PositiveIntToBoolConverter x:Key="PositiveIntToBoolConverter"/>
     <converters:NonemptyStringToVisibilityConverter x:Key="NonemptyStringToVisibilityConverter" />
@@ -15,6 +16,8 @@
     <converters:NegateBoolConverter x:Key="NegateBoolConverter" />
     <converters:BoolNegatedToVisibilityConverter x:Key="BoolNegatedToVisibilityConverter" />
     <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    <specificConverters:NoteVisibilityConverter x:Key="NoteVisibilityConverter" />
+    <specificConverters:GroupAddonViewToSingleAddonViewsConverter x:Key="GroupAddonViewToSingleAddonViewsConverter" />
     <Style x:Key="ItemIcon" TargetType="Label">
       <Setter Property="Margin" Value="2 0 2 0" />
       <Setter Property="Padding" Value="0"/>
@@ -31,18 +34,23 @@
                 Content="Tags" Click="btnAssignTags_Click"             
                 IsEnabled="{Binding SelectedItem, ElementName=lstAddonViews, Converter={StaticResource ObjectNotNullToBoolConverter}}" />
 
+        <Button x:Name="btnDescription"  DockPanel.Dock="Left" 
+                Content="Note" Click="btnDescription_Click"             
+                IsEnabled="{Binding SelectedItem, ElementName=lstAddonViews, Converter={StaticResource ObjectNotNullToBoolConverter}}" />
+
         <Button x:Name="btnGroup"  DockPanel.Dock="Left" 
                 Content="Groups" Click="btnGroup_Click"            
                 IsEnabled="{Binding SelectedItem, ElementName=lstAddonViews, Converter={StaticResource ObjectNotNullToBoolConverter}}" />
 
-        <Button x:Name="btnClose" Content="Close" DockPanel.Dock="Right" 
+        <TextBox x:Name="txtFilter" DockPanel.Dock="Left" Width="120" Height="34" Margin="4 0 4 0" Padding="8" TextChanged="txtFilter_TextChanged" KeyUp="txtFilter_KeyUp" />
+
+        <Button x:Name="btnClose" Content="Save &amp; Close" DockPanel.Dock="Right" 
                 Click="btnClose_Click"/>
-        <Button x:Name="btnSave" Content="Save" DockPanel.Dock="Right" 
-              Click="btnSave_Click"/>
         <Button x:Name="btnLoad" Content="Reload" DockPanel.Dock="Right" 
               Click="btnLoad_Click"/>
       </DockPanel>
-      <ListView x:Name="lstAddonViews" ItemsSource="{Binding}" HorizontalContentAlignment="Stretch">
+      <ListView x:Name="lstAddonViews" ItemsSource="{Binding}" 
+                HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
         <ListView.Template>
           <ControlTemplate>
             <ScrollViewer>
@@ -86,9 +94,23 @@
                   </Label.Content>
                 </Label>
               </DockPanel>
-              <StackPanel  DockPanel.Dock="Top" Orientation="Horizontal" Margin="16 4 4 4">
+              <StackPanel  DockPanel.Dock="Top" Orientation="Horizontal" Margin="16 4 4 4"
+                           Visibility="{Binding IsGrouped, Converter={StaticResource BoolNegatedToVisibilityConverter}}">
                 <TextBlock Text=".\" />
                 <TextBlock Text="{Binding SourceName}" />
+              </StackPanel>
+              <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="16 4 4 4"
+                           Visibility="{Binding IsGrouped, Converter={StaticResource BoolToVisibilityConverter}}">
+                <ItemsControl ItemsSource="{Binding Converter={StaticResource GroupAddonViewToSingleAddonViewsConverter}}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <StackPanel Orientation="Horizontal">
+                        <TextBlock FontWeight="Bold" Text="{Binding Title}" MinWidth="150" />
+                        <TextBlock Text="{Binding SourceName}" Margin="16 0 0 0" />
+                      </StackPanel>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
               </StackPanel>
               <StackPanel  DockPanel.Dock="Top"
                            Orientation="Horizontal" Margin="16 4 4 4" 
@@ -100,6 +122,8 @@
                                  Tag="{Binding Path=DataContext.SourceName, RelativeSource={RelativeSource AncestorType=StackPanel}}" 
                                  DataContext="{Binding Tags}"
                                  MouseDoubleClick="TagPanel_MouseDoubleClick" Margin="16 4 4 4"/>
+              <TextBlock Text="{Binding Note}" Margin="16 0 0 0" TextWrapping="Wrap"
+                         Visibility="{Binding Converter={StaticResource NoteVisibilityConverter}}" />
             </StackPanel>
           </DataTemplate>
         </ListView.ItemTemplate>

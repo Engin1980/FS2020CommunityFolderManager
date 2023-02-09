@@ -30,6 +30,14 @@
       <Setter Property="FontFamily" Value="Anonymous Pro" />
       <Setter Property="FontSize" Value="16" />
     </Style>
+    <Style TargetType="TextBox">
+      <Setter Property="FontFamily" Value="Anonymous Pro"/>
+      <Setter Property="FontSize" Value="16" />
+    </Style>
+    <Style TargetType="Hyperlink">
+      <Setter Property="FontFamily" Value="Anonymous Pro"/>
+      <Setter Property="FontSize" Value="16" />
+    </Style>
     <!--<Style TargetType="{x:Type Button}">
       <Setter Property="Background" Value="CadetBlue" />
       <Setter Property="FontFamily" Value="Anonymous Pro"/>

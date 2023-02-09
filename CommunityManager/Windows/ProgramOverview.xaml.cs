@@ -43,17 +43,13 @@ namespace CommunityManager.Windows
 
     private void btnLoad_Click(object sender, RoutedEventArgs e)
     {
-      GuiUtils.ReloadPrograms(this.Project,true, true);
-    }
-
-    private void btnSave_Click(object sender, RoutedEventArgs e)
-    {
-      GuiUtils.SavePrograms(this.Project, true);
+      GuiUtils.ReloadPrograms(this.Project, true, true);
     }
 
     private void btnClose_Click(object sender, RoutedEventArgs e)
     {
-      this.Close();
+      if (GuiUtils.SavePrograms(this.Project, true) == GuiUtils.Result.Success)
+        this.Close();
     }
 
     private void Window_Closed(object sender, EventArgs e)

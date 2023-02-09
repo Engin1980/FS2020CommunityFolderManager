@@ -40,5 +40,14 @@ namespace CommunityManagerLib.Addons
     public override bool IsActive => this.Addon.IsActive;
     public override bool IsNew => this.Addon.IsNew;
     public override bool IsGrouped => false;
+    public override string? Note
+    {
+      get => this.Addon.State.Note;
+      set
+      {
+        this.Addon.State.Note = value;
+        base.InvokePropertyChanged(nameof(Note));
+      }
+    }
   }
 }

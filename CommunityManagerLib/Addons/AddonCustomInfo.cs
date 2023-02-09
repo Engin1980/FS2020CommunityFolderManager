@@ -28,5 +28,11 @@ namespace CommunityManagerLib.Addons
       get => GetProperty<List<string>>(nameof(Tags))!;
       set => UpdateProperty(nameof(Tags), value);
     }
+
+    public string? Note
+    {
+      get => base.GetProperty<string?>(nameof(Note))!;
+      set => base.UpdateProperty(nameof(Note), value);
+    }
   }
 }

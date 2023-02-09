@@ -24,8 +24,8 @@ namespace CommunityManagerLib.Addons
       {
         AddonManifestData manifest = AddonManifestData.Create(addonSource);
         Addon a;
-        if (stateDict.ContainsKey(addonSource.Source))
-          a = new Addon(addonSource, manifest, stateDict[addonSource.Source], true, false);
+        if (stateDict.ContainsKey(addonSource.SourceName))
+          a = new Addon(addonSource, manifest, stateDict[addonSource.SourceName], true, false);
         else
           a = new Addon(addonSource, manifest, new AddonCustomInfo(), true, true);
         tmp.Add(new SingleAddonView(a));
@@ -39,10 +39,10 @@ namespace CommunityManagerLib.Addons
         {
           AddonManifestData manifest = AddonManifestData.Create(addonSource);
           Addon a;
-          if (stateDict.ContainsKey(addonSource.Source))
-            a = new Addon(addonSource, manifest, stateDict[addonSource.Source], true, false);
+          if (stateDict.ContainsKey(addonSource.SourceName))
+            a = new Addon(addonSource, manifest, stateDict[addonSource.SourceName], false, false);
           else
-            a = new Addon(addonSource, manifest, new AddonCustomInfo(), true, true);
+            a = new Addon(addonSource, manifest, new AddonCustomInfo(), false, true);
           tmp.Add(new SingleAddonView(a));
         }
       }
@@ -67,7 +67,7 @@ namespace CommunityManagerLib.Addons
           if (usedGroupKeys.Contains(key)) continue;
           usedGroupKeys.Add(key);
           List<SingleAddonView> addons = lst.Where(q => q.Addon.State.GroupGuid == key).ToList();
-          GroupAddonView gav = new(addons, addons.First().Title + $" + {addons.Count - 1} addons");
+          GroupAddonView gav = new(addons, key);
           ret.Add(gav);
         }
       }

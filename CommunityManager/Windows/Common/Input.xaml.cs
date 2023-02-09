@@ -1,6 +1,9 @@
-﻿using System;
+﻿using CommunityManager.Converters;
+using CommunityManager.Types;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -28,6 +31,7 @@ namespace CommunityManager.Windows
         Value = value;
       }
 
+      public bool AcceptsEmptyString { get; set; } = false;
       public string Title { get; set; }
       public string Prompt { get; set; }
       public string Value { get; set; }
@@ -39,12 +43,22 @@ namespace CommunityManager.Windows
     public Input()
     {
       InitializeComponent();
+      txtInput.SelectAll();
       txtInput.Focus();
     }
 
     public Input(Data data) : this()
     {
       this.DataContext = data ?? throw new ArgumentNullException(nameof(data));
+      if (data.AcceptsEmptyString == false)
+      {
+        Binding binding = new(nameof(Data.Value))
+        {
+          UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+          Converter = new StringNonEmptyToBoolConverter()
+        };
+        btnApply.SetBinding(IsEnabledProperty, binding);
+      }
     }
 
     private void btnApply_Click(object sender, RoutedEventArgs e)
@@ -65,6 +79,16 @@ namespace CommunityManager.Windows
         btnApply_Click(this, new RoutedEventArgs());
       else if (e.Key == Key.Escape)
         btnCancel_Click(this, new RoutedEventArgs());
+    }
+
+    public static DialogResult ShowDialog(string title, string prompt, string value)
+    {
+      Data data = new(title, prompt, value);
+      new Input(data)
+      {
+        Owner = Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive)
+      }.ShowDialog();
+      return data.DialogResult;
     }
   }
 }

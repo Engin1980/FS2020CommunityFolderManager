@@ -99,7 +99,7 @@ namespace CommunityManagerLib
       AddonInitializer nai = new AddonInitializer();
       List<AddonView> ret = nai.AnalyseAddons(communityFolder, customInfos, out List<string> errors);
       issues.AddRange(errors);
-      return ret.OrderBy(q => q.Title).ToBindingList();
+      return ret.ToBindingList(); //.OrderBy(q => q.Title).ToBindingList();
     }
 
     public void SaveAddons() //todo rename parameter (everywhere in code)
@@ -109,13 +109,13 @@ namespace CommunityManagerLib
       Dictionary<string, AddonCustomInfo> a = this.Addons
         .OfType<SingleAddonView>()
         .ToDictionary(
-          q => q.Addon.Source.Source,
+          q => q.Addon.Source.SourceName,
           q => q.Addon.State);
       Dictionary<string, AddonCustomInfo> b = this.Addons
         .OfType<GroupAddonView>()
         .SelectMany(q => q.Addons)
         .ToDictionary(
-          q => q.Addon.Source.Source,
+          q => q.Addon.Source.SourceName,
           q => q.Addon.State);
 
       Trace.Assert(a.Keys.Intersect(b.Keys).Count() == 0);

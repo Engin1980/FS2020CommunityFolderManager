@@ -16,5 +16,6 @@ namespace CommunityManagerLib.Addons
     public abstract bool IsActive { get; }
     public abstract bool IsNew { get; }
     public abstract bool IsGrouped { get; }
+    public abstract string? Note { get; set; }
   }
 }

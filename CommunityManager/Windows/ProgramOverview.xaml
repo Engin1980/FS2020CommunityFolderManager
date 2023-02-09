@@ -24,10 +24,8 @@
       <Button x:Name="btnDelete"  DockPanel.Dock="Left"
               Content="Delete" Click="btnDelete_Click" 
               IsEnabled="{Binding Items.Count, ElementName=lstPrograms, Converter={StaticResource PositiveIntToBoolConverter}}" />
-      <Button x:Name="btnClose" Content="Close" DockPanel.Dock="Right" 
+      <Button x:Name="btnClose" Content="Save &amp; Close" DockPanel.Dock="Right" 
               Click="btnClose_Click"/>
-      <Button x:Name="btnSave" Content="Save" DockPanel.Dock="Right" 
-              Click="btnSave_Click"/>
       <Button x:Name="btnLoad" Content="Reload" DockPanel.Dock="Right" 
               Click="btnLoad_Click"/>
     </DockPanel>

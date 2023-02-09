@@ -4,9 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CommunityManager.Windows"
+        xmlns:specificConverters="clr-namespace:CommunityManager.Converters.Specific"
         mc:Ignorable="d"
         Title="Run" Height="450" Width="1000" Loaded="Window_Loaded" Closed="Window_Closed">
-  <DockPanel>
+  <Window.Resources>
+    <specificConverters:RunTaskStateToGreenRedColorConverter x:Key="RunTaskStateToGreenRedColorConverter" />
+  </Window.Resources>
+  <DockPanel Margin="8">
     <DockPanel DockPanel.Dock="Bottom">
       <CheckBox DockPanel.Dock="Right" Margin="4" IsChecked="True" x:Name="chkAutoClose">
         <CheckBox.Content>
@@ -32,10 +36,13 @@
         <ListView x:Name="lstDone">
           <ListView.ItemTemplate>
             <DataTemplate>
-              <StackPanel Orientation="Horizontal">
-                <Label Width="100" Content="{Binding State}" />
-                <Label Width="400" Content="{Binding Title}" />
-                <Label Content="{Binding ResultText}" />
+              <StackPanel Orientation="Horizontal" >
+                <Label Width="100" Content="{Binding State}"
+                       Foreground="{Binding State,Converter={StaticResource RunTaskStateToGreenRedColorConverter}}"/>
+                <Label Width="400" Content="{Binding Title}"
+                       Foreground="{Binding State,Converter={StaticResource RunTaskStateToGreenRedColorConverter}}"/>
+                <Label Content="{Binding ResultText}"
+                       Foreground="{Binding State,Converter={StaticResource RunTaskStateToGreenRedColorConverter}}"/>
               </StackPanel>
             </DataTemplate>
           </ListView.ItemTemplate>

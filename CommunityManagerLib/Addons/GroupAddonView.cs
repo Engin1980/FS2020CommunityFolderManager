@@ -7,7 +7,9 @@ namespace CommunityManagerLib.Addons
 {
   public class GroupAddonView : AddonView
   {
+    private string? _Note;
 
+    public override string? Note { get => _Note; set => _Note = value; }
     public List<SingleAddonView> Addons { get; set; }
 
     public override string Author => string.Join(", ", Addons.Select(q => q.Addon.Manifest.GetAuthor()).Distinct());

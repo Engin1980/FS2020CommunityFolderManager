@@ -43,15 +43,10 @@ namespace CommunityManager.Windows
       if (e.PropertyName == nameof(Project.Settings.CommunityFolderPath)) isSettingsUpdated = true;
     }
 
-    private void btnSave_Click(object sender, RoutedEventArgs e)
-    {
-      GuiUtils.SaveSettings(this.Project, true);
-    }
-
     private void btnClose_Click(object sender, RoutedEventArgs e)
     {
-
-      this.Close();
+      if (GuiUtils.SaveSettings(this.Project, true) == GuiUtils.Result.Success)
+        this.Close();
     }
 
     private void btnLoad_Click(object sender, RoutedEventArgs e)

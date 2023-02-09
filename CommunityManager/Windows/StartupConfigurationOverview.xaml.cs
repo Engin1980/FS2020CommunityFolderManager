@@ -39,26 +39,25 @@ namespace CommunityManager.Windows
       this.DataContext = project.StartupConfigurations;
     }
 
-    private void btnSave_Click(object sender, RoutedEventArgs e)
-    {
-      GuiUtils.SaveStartupConfigurations(this.Project, true);
-    }
-
     private void btnClose_Click(object sender, RoutedEventArgs e)
     {
-      this.Close();
+      if (GuiUtils.SaveStartupConfigurations(this.Project, true) == GuiUtils.Result.Success)
+        this.Close();
     }
 
     private void btnAdd_Click(object sender, RoutedEventArgs e)
     {
-      StartupConfiguration sc = new StartupConfiguration();
+      StartupConfiguration sc = new StartupConfiguration()
+      {
+        Title = "New Startup Configuration"
+      };
       this.Project.StartupConfigurations.Add(sc);
       UpdateTitle(sc);
     }
 
     private void UpdateTitle(StartupConfiguration sc)
     {
-      var data = new Input.Data("Custom title...", "Select title:", "")
+      var data = new Input.Data("Custom title...", "Select title:", sc.Title)
       {
         WindowHeight = 100,
         WindowWidth = 200
