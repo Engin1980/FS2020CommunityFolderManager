@@ -80,17 +80,17 @@ namespace CommunityManager.Windows
 
     private void btnCustomTitle_Click(object sender, RoutedEventArgs e)
     {
-      if (lstAddonStates.SelectedItem is not AddonView addonInfo) return;
+      if (lstAddonStates.SelectedItem is not AddonView addonView) return;
 
-      UpdateCustomTitle(addonInfo);
+      UpdateCustomTitle(addonView);
     }
 
-    private void UpdateCustomTitle(AddonView addonInfo)
+    private void UpdateCustomTitle(AddonView addonView)
     {
       Input.Data data = new(
         "Adjust Custom Title...",
         "Set the new custom title for the addon:",
-        addonInfo.State.CustomTitle ?? addonInfo.Addon.ManifestTitle ?? ""
+        addonView.Title
         )
       {
         WindowHeight = 100,
@@ -100,13 +100,11 @@ namespace CommunityManager.Windows
 
       if (data.DialogResult == Types.DialogResult.Cancel) return;
 
-      addonInfo.State.CustomTitle = data.Value.Trim();
+      addonView.Title = data.Value.Trim();
     }
 
     private void btnAssignTags_Click(object sender, RoutedEventArgs e)
     {
-      if (lstAddonStates.SelectedItem is not AddonView addonInfo) return;
-
       var addonInfos = lstAddonStates.SelectedItems.Cast<AddonView>().ToList();
       if (addonInfos.Count > 1)
         if (Message.ShowDialog(
@@ -117,13 +115,13 @@ namespace CommunityManager.Windows
       UpdateTags(addonInfos);
     }
 
-    private void UpdateTags(List<AddonView> addonInfos)
+    private void UpdateTags(List<AddonView> addonViews)
     {
-      Trace.Assert(addonInfos.Count > 0);
+      Trace.Assert(addonViews.Count > 0);
 
       var tmp = (BindingList<AddonView>)this.DataContext!;
       BindingList<TagEditor.CheckItem> tags = Project.GetAllTags()
-        .Select(q => new TagEditor.CheckItem(q, addonInfos.First().State.Tags.Contains(q)))
+        .Select(q => new TagEditor.CheckItem(q, addonViews.First().Tags.Contains(q)))
         .ToBindingList();
 
       TagEditor.Data data = new()
@@ -134,7 +132,7 @@ namespace CommunityManager.Windows
       if (data.DialogResult == Types.DialogResult.Cancel) return;
 
       var newTags = data.Tags.Where(q => q.IsChecked).Select(q => q.Label);
-      addonInfos.ForEach(q => q.State.Tags = newTags.ToList());
+      addonViews.ForEach(q => q.Tags = newTags.ToList());
       int selectedIndex = lstAddonStates.SelectedIndex;
       lstAddonStates.DataContext = null;
       lstAddonStates.DataContext = this.DataContext; //TODO improve how here reset of binding is done
@@ -166,7 +164,7 @@ namespace CommunityManager.Windows
     {
       Label label = (Label)sender;
       string tag = (string)label.Tag;
-      AddonView addonInfo = this.Project.Addons.Single(q => q.Addon.Folder == tag);
+      AddonView addonInfo = this.Project.Addons.Single(q => q.Source == tag);
       UpdateCustomTitle(addonInfo);
 
     }
@@ -175,9 +173,9 @@ namespace CommunityManager.Windows
     {
       TagPanel panel = (TagPanel)sender;
       string tag = (string)panel.Tag;
-      var addonInfos = this.Project.Addons.Where(q => q.Addon.Folder == tag).ToList();
-      Trace.Assert(addonInfos.Count == 1);
-      UpdateTags(addonInfos);
+      var addonViews = this.Project.Addons.Where(q => q.Source == tag).ToList();
+      Trace.Assert(addonViews.Count == 1);
+      UpdateTags(addonViews);
     }
   }
 }

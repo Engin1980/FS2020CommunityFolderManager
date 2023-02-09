@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CommunityManager.Windows"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="{Binding WindowHeight}" Width="{Binding WindowWidth}">
+        Title="{Binding Title}" Height="{Binding WindowHeight}" Width="{Binding WindowWidth}" Loaded="Window_Loaded">
   <DockPanel>
     <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
       <Label Content="{Binding WindowHeight}" />
@@ -13,7 +13,7 @@
       <Label Content="{Binding WindowWidth}" />
     </StackPanel>
     <DockPanel DockPanel.Dock="Bottom" LastChildFill="False">
-      <ItemsControl ItemsSource="{Binding AvailableDialogResults}">
+      <ItemsControl ItemsSource="{Binding AvailableDialogResults}" x:Name="itmButtons">
         <ItemsControl.ItemsPanel>
           <ItemsPanelTemplate>
             <StackPanel Orientation="Horizontal" />

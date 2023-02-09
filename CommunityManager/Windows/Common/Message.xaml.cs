@@ -61,5 +61,10 @@ namespace CommunityManager.Windows
       new Message(data).ShowDialog();
       return data.DialogResult;
     }
+
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+      itmButtons.Focus();
+    }
   }
 }

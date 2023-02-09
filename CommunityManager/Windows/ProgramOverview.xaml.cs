@@ -49,18 +49,34 @@ namespace CommunityManager.Windows
     private void LoadData()
     {
       if (Message.ShowDialog(
-        "Load",
-        "You will loose all unsaved changes. Are you sure you would like to reload the data?",
-        Types.DialogResult.Yes, Types.DialogResult.Cancel) == Types.DialogResult.Cancel) return;
+          "Load",
+          "You will loose all unsaved changes. Are you sure you would like to reload the data?",
+          Types.DialogResult.Yes, Types.DialogResult.Cancel) == Types.DialogResult.Cancel) return;
 
-      this.Project.ReloadPrograms();
-      Message.ShowDialog("Reloaded.", "Changes have been reloaded.", Types.DialogResult.Ok);
+      try
+      {
+        this.Project.ReloadPrograms();
+        Message.ShowDialog("Reloaded.", "Changes have been reloaded.", Types.DialogResult.Ok);
+      }
+      catch (Exception ex)
+      {
+        Message.ShowDialog("Reload failed.", "Changes have not been reloaded. Reason: " + ex.ToMessageString(),
+          Types.DialogResult.Ok);
+      }
     }
 
     private void btnSave_Click(object sender, RoutedEventArgs e)
     {
-      this.Project.SavePrograms();
-      Message.ShowDialog("Saved.", "Changes have been saved.", Types.DialogResult.Ok);
+      try
+      {
+        this.Project.SavePrograms();
+        Message.ShowDialog("Saved.", "Changes have been saved.", Types.DialogResult.Ok);
+      }
+      catch (Exception ex)
+      {
+        Message.ShowDialog("Save failed.", "Changes have not been saved. Reason: " + ex.ToMessageString(),
+          Types.DialogResult.Ok);
+      }
     }
 
     private void btnClose_Click(object sender, RoutedEventArgs e)

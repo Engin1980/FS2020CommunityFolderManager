@@ -44,23 +44,23 @@
             <StackPanel>
               <Label x:Name="lblDisplayTitle" 
                      MouseDoubleClick="lblDisplayTitle_MouseDoubleClick"
-                     Tag="{Binding Addon.Folder}">
+                     Tag="{Binding Source}">
                 <Label.Content>
-                  <TextBlock  FontWeight="Bold" FontSize="20" Text="{Binding DisplayTitle}" />
+                  <TextBlock  FontWeight="Bold" FontSize="20" Text="{Binding Title}" />
                 </Label.Content>
               </Label>
               <StackPanel Orientation="Horizontal" Margin="16 4 4 4">
                 <TextBlock Text=".\" />
-                <TextBlock Text="{Binding Addon.Folder}" />
+                <TextBlock Text="{Binding Source}" />
               </StackPanel>
               <StackPanel Orientation="Horizontal" Margin="16 4 4 4" 
                           Visibility="{Binding DisplayCreator, Converter={StaticResource NonemptyStringToVisibilityConverter}}" >
                 <TextBlock Text="by " />
-                <TextBlock Text="{Binding DisplayCreator}" />
+                <TextBlock Text="{Binding Author}" />
               </StackPanel>
               <controls:TagPanel  
                 Tag="{Binding Path=DataContext.Addon.Folder, RelativeSource={RelativeSource AncestorType=StackPanel}}" 
-                DataContext="{Binding State.Tags}"
+                DataContext="{Binding Tags}"
                 MouseDoubleClick="TagPanel_MouseDoubleClick" Margin="16 4 4 4"/>
             </StackPanel>
           </DataTemplate>

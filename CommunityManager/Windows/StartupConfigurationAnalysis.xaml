@@ -24,8 +24,8 @@
           <ItemsControl.ItemTemplate>
             <DataTemplate>
               <StackPanel>
-                <Label Content="{Binding DisplayTitle}" />
-                <controls:TagPanel DataContext="{Binding State.Tags}" />
+                <Label Content="{Binding Title}" />
+                <controls:TagPanel DataContext="{Binding Tags}" />
               </StackPanel>
             </DataTemplate>
           </ItemsControl.ItemTemplate>
@@ -46,8 +46,8 @@
         <ListView.ItemTemplate>
           <DataTemplate>
             <StackPanel>
-              <Label Content="{Binding DisplayTitle}" />
-              <controls:TagPanel DataContext="{Binding State.Tags}" />
+              <Label Content="{Binding Title}" />
+              <controls:TagPanel DataContext="{Binding Tags}" />
             </StackPanel>
           </DataTemplate>
         </ListView.ItemTemplate>
@@ -76,7 +76,7 @@
     </DockPanel>
 
     <DockPanel Grid.Row="1" Grid.Column="1">
-      <Label DockPanel.Dock="Top" FontWeight="Bold">Included Programs</Label>
+      <Label DockPanel.Dock="Top" FontWeight="Bold">Excluded Programs</Label>
       <ListView x:Name="lstExcludedPrograms">
         <ListView.Template>
           <ControlTemplate>

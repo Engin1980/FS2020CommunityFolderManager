@@ -41,8 +41,16 @@ namespace CommunityManager.Windows
 
     private void btnSave_Click(object sender, RoutedEventArgs e)
     {
-      this.Project.SaveStartupConfigurations();
-      Message.ShowDialog("Saved.", "Changes have been saved.", Types.DialogResult.Ok);
+      try
+      {
+        this.Project.SaveStartupConfigurations();
+        Message.ShowDialog("Saved.", "Changes have been saved.", Types.DialogResult.Ok);
+      }
+      catch (Exception ex)
+      {
+        Message.ShowDialog("Save failed.", "Changes have not been saved. Reason: " + ex.ToMessageString(),
+          Types.DialogResult.Ok);
+      }
     }
 
     private void btnClose_Click(object sender, RoutedEventArgs e)
@@ -132,8 +140,16 @@ namespace CommunityManager.Windows
         "You will loose all unsaved changes. Are you sure you would like to reload the data?",
         Types.DialogResult.Yes, Types.DialogResult.Cancel) == Types.DialogResult.Cancel) return;
 
-      this.Project.ReloadStartupConfigurations();
-      Message.ShowDialog("Reloaded.", "Changes have been reloaded.", Types.DialogResult.Ok);
+      try
+      {
+        this.Project.ReloadStartupConfigurations();
+        Message.ShowDialog("Reloaded.", "Changes have been reloaded.", Types.DialogResult.Ok);
+      }
+      catch (Exception ex)
+      {
+        Message.ShowDialog("Reload failed.", "Changes have not been reloaded. Reason: " + ex.ToMessageString(),
+          Types.DialogResult.Ok);
+      }
     }
 
     private void TagPanel_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -168,13 +184,14 @@ namespace CommunityManager.Windows
       var addons = re.AnalyseAddons(Project, sc);
       var programs = re.AnalysePrograms(Project, sc);
 
-      var includedAddons = addons.Where(q=>q.Value).Select(q=>q.Key).ToList();
+      var includedAddons = addons.Where(q => q.Value).Select(q => q.Key).ToList();
       var excludedAddons = addons.Where(q => !q.Value).Select(q => q.Key).ToList();
       var includedPrograms = programs.Where(q => q.Value).Select(q => q.Key).ToList();
       var excludedPrograms = programs.Where(q => !q.Value).Select(q => q.Key).ToList();
 
       new StartupConfigurationAnalysis(
-        includedAddons, excludedAddons, includedPrograms, excludedPrograms).ShowDialog();
+        includedAddons, excludedAddons, includedPrograms, excludedPrograms)
+        .ShowDialog();
     }
   }
 }
