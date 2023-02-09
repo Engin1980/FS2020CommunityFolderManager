@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace CommunityManagerLib.Addons
 {
-    public class AddonDependency
-    {
-        public string Name { get; set; }
-        public string PackageVersion { get; set; }
-    }
+  public class AddonDependency
+  {
+    public string Name { get; set; }
+    public string PackageVersion { get; set; }
+  }
 }

@@ -27,8 +27,8 @@ namespace CommunityManager.Windows
     }
 
     public StartupConfigurationAnalysis(
-      List<AddonInfo> includedAddons,
-      List<AddonInfo> excludedAddons,
+      List<AddonView> includedAddons,
+      List<AddonView> excludedAddons,
       List<Program> includedPrograms,
       List<Program> excludedPrograms
       ) : this()

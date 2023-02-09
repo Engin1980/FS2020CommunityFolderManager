@@ -1,21 +1,44 @@
-using System;
-using System.Windows.Documents;
-using System.Collections.Generic;
+﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace CommunityManagerLib.Addons
 {
-    public class Addon
+  public class Addon : NotifyPropertyChangedBase
+  {
+    [JsonIgnore]
+    public bool IsActive
     {
-        public Addon(string folder)
-        {
-            Folder = folder;
-        }
-
-        public string Folder { get; set; }
-        public string? Type { get; set; }
-        public string? ManifestTitle { get; set; }
-        public string? Manufacturer { get; set; }
-        public string? Creator { get; set; }
-        public List<AddonDependency> Dependencies { get; } = new();
+      get => GetProperty<bool>(nameof(IsActive));
+      set => UpdateProperty(nameof(IsActive), value);
     }
+
+    [JsonIgnore]
+    public bool IsNew
+    {
+      get => GetProperty<bool>(nameof(IsNew));
+      set => UpdateProperty(nameof(IsNew), value);
+    }
+
+    [JsonIgnore]
+    public AddonManifestData Manifest { get; set; }
+
+    [JsonIgnore]
+    public AddonSource Source { get; set; }
+
+    public AddonCustomInfo State { get; set; }
+
+    public Addon(AddonSource source, AddonManifestData manifest, AddonCustomInfo state, bool isActive, bool isNew)
+    {
+      Source = source ?? throw new ArgumentNullException(nameof(source));
+      Manifest = manifest ?? throw new ArgumentNullException(nameof(manifest));
+      State = state ?? throw new ArgumentNullException(nameof(state));
+      IsActive = isActive;
+      IsNew = isNew;
+    }
+  }
 }

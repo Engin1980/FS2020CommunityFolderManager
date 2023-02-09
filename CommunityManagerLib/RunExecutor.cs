@@ -13,15 +13,25 @@ namespace CommunityManagerLib
   {
     public RunExecutor() { }
 
-    public Dictionary<AddonInfo, bool> AnalyseAddons(Project project, StartupConfiguration startupConfiguration)
+    public Dictionary<SingleAddonView, bool> AnalyseAddons(Project project, StartupConfiguration startupConfiguration)
     {
-      Dictionary<AddonInfo, bool> ret = new();
+      Dictionary<SingleAddonView, bool> ret = new();
 
-      foreach (var addonInfo in project.Addons)
+      foreach (var addonInfo in project.Addons.OfType<SingleAddonView>())
       {
-        var availableTags = addonInfo.State.Tags;
+        var availableTags = addonInfo.Addon.State.Tags;
         var requiredTags = startupConfiguration.Tags;
         ret[addonInfo] = IsTagMatch(requiredTags, availableTags);
+      }
+
+      foreach (var addonInfo in project.Addons.OfType<GroupAddonView>())
+      {
+        var availableTags = addonInfo.Addons.First().Addon.State.Tags;
+        var requiredTags = startupConfiguration.Tags;
+        foreach (var subaddonInfo in addonInfo.Addons)
+        {
+          ret[subaddonInfo] = IsTagMatch(requiredTags, availableTags);
+        }
       }
 
       return ret;

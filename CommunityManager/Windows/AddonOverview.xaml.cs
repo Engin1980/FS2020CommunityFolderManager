@@ -47,24 +47,45 @@ namespace CommunityManager.Windows
          "You will loose all unsaved changes. Are you sure you would like to reload the data?",
          Types.DialogResult.Yes, Types.DialogResult.Cancel) == Types.DialogResult.Cancel) return;
 
-      this.Project.ReloadAddons();
-      Message.ShowDialog("Reloaded.", "Changes have been reloaded.", Types.DialogResult.Ok);
+      try
+      {
+        this.Project.ReloadAddons(out List<string> issues);
+        if (issues.Count == 0)
+          Message.ShowDialog("Reloaded.", "Changes have been reloaded.", Types.DialogResult.Ok);
+        else
+          Message.ShowDialog("Reloaded with issues",
+            "Changes have been reloaded. However, there were some issues:\n" + string.Join("\n\t", issues),
+            Types.DialogResult.Ok);
+      }
+      catch (Exception ex)
+      {
+        Message.ShowDialog("Reload failed.", "Changes have not been reloaded. Reason: " + ex.ToMessageString(),
+          Types.DialogResult.Ok);
+      }
     }
 
     private void SaveData()
     {
-      this.Project.SaveAddons();
-      Message.ShowDialog("Saved.", "Changes have been saved.", Types.DialogResult.Ok);
+      try
+      {
+        this.Project.SaveAddons();
+        Message.ShowDialog("Saved.", "Changes have been saved.", Types.DialogResult.Ok);
+      }
+      catch (Exception ex)
+      {
+        Message.ShowDialog("Save failed.", "Changes have not been saved. Reason: " + ex.ToMessageString(),
+          Types.DialogResult.Ok);
+      }
     }
 
     private void btnCustomTitle_Click(object sender, RoutedEventArgs e)
     {
-      if (lstAddonStates.SelectedItem is not AddonInfo addonInfo) return;
+      if (lstAddonStates.SelectedItem is not AddonView addonInfo) return;
 
       UpdateCustomTitle(addonInfo);
     }
 
-    private void UpdateCustomTitle(AddonInfo addonInfo)
+    private void UpdateCustomTitle(AddonView addonInfo)
     {
       Input.Data data = new(
         "Adjust Custom Title...",
@@ -84,9 +105,9 @@ namespace CommunityManager.Windows
 
     private void btnAssignTags_Click(object sender, RoutedEventArgs e)
     {
-      if (lstAddonStates.SelectedItem is not AddonInfo addonInfo) return;
+      if (lstAddonStates.SelectedItem is not AddonView addonInfo) return;
 
-      var addonInfos = lstAddonStates.SelectedItems.Cast<AddonInfo>().ToList();
+      var addonInfos = lstAddonStates.SelectedItems.Cast<AddonView>().ToList();
       if (addonInfos.Count > 1)
         if (Message.ShowDialog(
           "Adjust multiple items?",
@@ -96,11 +117,11 @@ namespace CommunityManager.Windows
       UpdateTags(addonInfos);
     }
 
-    private void UpdateTags(List<AddonInfo> addonInfos)
+    private void UpdateTags(List<AddonView> addonInfos)
     {
       Trace.Assert(addonInfos.Count > 0);
 
-      var tmp = (BindingList<AddonInfo>)this.DataContext!;
+      var tmp = (BindingList<AddonView>)this.DataContext!;
       BindingList<TagEditor.CheckItem> tags = Project.GetAllTags()
         .Select(q => new TagEditor.CheckItem(q, addonInfos.First().State.Tags.Contains(q)))
         .ToBindingList();
@@ -145,7 +166,7 @@ namespace CommunityManager.Windows
     {
       Label label = (Label)sender;
       string tag = (string)label.Tag;
-      AddonInfo addonInfo = this.Project.Addons.Single(q => q.Addon.Folder == tag);
+      AddonView addonInfo = this.Project.Addons.Single(q => q.Addon.Folder == tag);
       UpdateCustomTitle(addonInfo);
 
     }
