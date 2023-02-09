@@ -8,15 +8,35 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\Icons\Actions-address-book-new-icon.png" />
+    <None Remove="Images\Icons\Actions-draw-text-icon.png" />
+    <None Remove="Images\Icons\Actions-feed-subscribe-icon.png" />
+    <None Remove="Images\Icons\Actions-tab-duplicate-icon.png" />
+    <None Remove="Images\Icons\Button-Blank-Green-icon.png" />
+    <None Remove="Images\Icons\Button-Blank-Yellow-icon.png" />
+    <None Remove="Images\Icons\new-icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\CommunityManagerLib\CommunityManagerLib.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Images\Icons\" />
+    <PackageReference Include="WindowsAPICodePack" Version="7.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="WindowsAPICodePack" Version="7.0.1" />
+    <Resource Include="Images\Icons\Actions-address-book-new-icon.png" />
+    <Resource Include="Images\Icons\Actions-draw-text-icon.png" />
+    <Resource Include="Images\Icons\Actions-feed-subscribe-icon.png" />
+    <Resource Include="Images\Icons\Actions-tab-duplicate-icon.png" />
+    <Resource Include="Images\Icons\Button-Blank-Green-icon.png" />
+    <Resource Include="Images\Icons\Button-Blank-Yellow-icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Icons\new-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>

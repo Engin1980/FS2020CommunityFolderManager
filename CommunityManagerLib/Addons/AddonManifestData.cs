@@ -66,7 +66,7 @@ namespace CommunityManagerLib.Addons
       {
         string? ret;
         if (!string.IsNullOrWhiteSpace(this.Manufacturer))
-          if (!string.IsNullOrWhiteSpace(this.Creator))
+          if (!string.IsNullOrWhiteSpace(this.Creator) && this.Manufacturer != this.Creator)
             ret = this.Manufacturer + ", " + this.Creator;
           else
             ret = this.Manufacturer;

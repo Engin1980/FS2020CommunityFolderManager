@@ -12,7 +12,7 @@
       <Button x:Name="btnCancel"  DockPanel.Dock="Right" Content="Cancel"  Margin="8" Padding="8" Click="btnCancel_Click"/>
     </DockPanel>
     <DockPanel DockPanel.Dock="Bottom">
-      <TextBox Text="{Binding Value}" MaxLines="1" Margin="8" />
+      <TextBox x:Name="txtInput" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" MaxLines="1" Margin="8" KeyDown="txtInput_KeyDown" />
     </DockPanel>
     <Label Content="{Binding Prompt}" Margin="8" />
   </DockPanel>

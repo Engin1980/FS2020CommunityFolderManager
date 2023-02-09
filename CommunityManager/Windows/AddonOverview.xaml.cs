@@ -40,47 +40,9 @@ namespace CommunityManager.Windows
     {
     }
 
-    private void LoadData()
-    {
-      if (Message.ShowDialog(
-         "Load",
-         "You will loose all unsaved changes. Are you sure you would like to reload the data?",
-         Types.DialogResult.Yes, Types.DialogResult.Cancel) == Types.DialogResult.Cancel) return;
-
-      try
-      {
-        this.Project.ReloadAddons(out List<string> issues);
-        if (issues.Count == 0)
-          Message.ShowDialog("Reloaded.", "Changes have been reloaded.", Types.DialogResult.Ok);
-        else
-          Message.ShowDialog("Reloaded with issues",
-            "Changes have been reloaded. However, there were some issues:\n" + string.Join("\n\t", issues),
-            Types.DialogResult.Ok);
-      }
-      catch (Exception ex)
-      {
-        Message.ShowDialog("Reload failed.", "Changes have not been reloaded. Reason: " + ex.ToMessageString(),
-          Types.DialogResult.Ok);
-      }
-    }
-
-    private void SaveData()
-    {
-      try
-      {
-        this.Project.SaveAddons();
-        Message.ShowDialog("Saved.", "Changes have been saved.", Types.DialogResult.Ok);
-      }
-      catch (Exception ex)
-      {
-        Message.ShowDialog("Save failed.", "Changes have not been saved. Reason: " + ex.ToMessageString(),
-          Types.DialogResult.Ok);
-      }
-    }
-
     private void btnCustomTitle_Click(object sender, RoutedEventArgs e)
     {
-      if (lstAddonStates.SelectedItem is not AddonView addonView) return;
+      if (lstAddonViews.SelectedItem is not AddonView addonView) return;
 
       UpdateCustomTitle(addonView);
     }
@@ -105,7 +67,7 @@ namespace CommunityManager.Windows
 
     private void btnAssignTags_Click(object sender, RoutedEventArgs e)
     {
-      var addonInfos = lstAddonStates.SelectedItems.Cast<AddonView>().ToList();
+      var addonInfos = lstAddonViews.SelectedItems.Cast<AddonView>().ToList();
       if (addonInfos.Count > 1)
         if (Message.ShowDialog(
           "Adjust multiple items?",
@@ -133,20 +95,20 @@ namespace CommunityManager.Windows
 
       var newTags = data.Tags.Where(q => q.IsChecked).Select(q => q.Label);
       addonViews.ForEach(q => q.Tags = newTags.ToList());
-      int selectedIndex = lstAddonStates.SelectedIndex;
-      lstAddonStates.DataContext = null;
-      lstAddonStates.DataContext = this.DataContext; //TODO improve how here reset of binding is done
-      lstAddonStates.SelectedIndex = selectedIndex;
+      int selectedIndex = lstAddonViews.SelectedIndex;
+      lstAddonViews.DataContext = null;
+      lstAddonViews.DataContext = this.DataContext; //TODO improve how here reset of binding is done
+      lstAddonViews.SelectedIndex = selectedIndex;
     }
 
     private void btnLoad_Click(object sender, RoutedEventArgs e)
     {
-      LoadData();
+      GuiUtils.ReloadAddons(this.Project, true, true);
     }
 
     private void btnSave_Click(object sender, RoutedEventArgs e)
     {
-      SaveData();
+      GuiUtils.SaveAddons(this.Project, true);
     }
 
     private void btnClose_Click(object sender, RoutedEventArgs e)
@@ -164,7 +126,7 @@ namespace CommunityManager.Windows
     {
       Label label = (Label)sender;
       string tag = (string)label.Tag;
-      AddonView addonInfo = this.Project.Addons.Single(q => q.Source == tag);
+      AddonView addonInfo = this.Project.Addons.Single(q => q.SourceName == tag);
       UpdateCustomTitle(addonInfo);
 
     }
@@ -173,9 +135,54 @@ namespace CommunityManager.Windows
     {
       TagPanel panel = (TagPanel)sender;
       string tag = (string)panel.Tag;
-      var addonViews = this.Project.Addons.Where(q => q.Source == tag).ToList();
+      var addonViews = this.Project.Addons.Where(q => q.SourceName == tag).ToList();
       Trace.Assert(addonViews.Count == 1);
       UpdateTags(addonViews);
+    }
+
+    private void btnGroup_Click(object sender, RoutedEventArgs e)
+    {
+      var addonViews = this.lstAddonViews.SelectedItems.Cast<AddonView>().ToList();
+      switch (addonViews.Count)
+      {
+        case 0:
+          Message.ShowDialog("Unable.", "At least item must be selected.", Types.DialogResult.Ok);
+          break;
+        case 1:
+          if (addonViews.Single() is not GroupAddonView)
+            Message.ShowDialog("Unable.", "The only selected item is not grouped set of addons to be ungrouped.", Types.DialogResult.Ok);
+          else
+          {
+            if (Message.ShowDialog("Really?", $"You are going ungroup {addonViews.Count} addons. Are you sure?",
+              Types.DialogResult.Yes, Types.DialogResult.No) == Types.DialogResult.Yes)
+            {
+              GroupAddonView gav = (GroupAddonView)addonViews.Single();
+              var tmp = gav.Addons;
+              int index = Project.Addons.IndexOf(gav);
+              Project.Addons.Remove(gav);
+              tmp.Reversed().ForEach(q => Project.Addons.Insert(index, q));
+              Message.ShowDialog("Done", $"Addons ungrouped.");
+            }
+          }
+          break;
+        default:
+          if (addonViews.Any(q => q is GroupAddonView))
+            Message.ShowDialog("Unable.", "The selected set contains already grouped items. Cannot group grouped items again.", Types.DialogResult.Ok);
+          else
+          {
+            if (Message.ShowDialog("Really?", $"You are going to group together {addonViews.Count} addons. Their tags will be intersected. Are you sure?",
+              Types.DialogResult.Yes, Types.DialogResult.No) == Types.DialogResult.Yes)
+            {
+              var tmp = addonViews.Cast<SingleAddonView>();
+              GroupAddonView gav = new(tmp, $"{addonViews.First().Title} + {addonViews.Count - 1} other");
+              int index = this.Project.Addons.IndexOf(tmp.First());
+              tmp.ForEach(q => this.Project.Addons.Remove(q));
+              this.Project.Addons.Insert(index, gav);
+              Message.ShowDialog("Done", $"Group with name '{gav.Title}' created.", Types.DialogResult.Ok);
+            }
+          }
+          break;
+      }
     }
   }
 }

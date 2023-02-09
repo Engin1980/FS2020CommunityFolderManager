@@ -6,11 +6,14 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace CommunityManagerLib
 {
@@ -77,29 +80,12 @@ namespace CommunityManagerLib
 
     #region Load/Save
 
-    //TODO delete
-    //public static Project Load(out List<Exception> issues)
-    //{
-    //  issues = new();
-    //  var s = LoadSettings(ref issues);
-    //  var a = string.IsNullOrEmpty(s.CommunityFolderPath) == false
-    //    ? LoadAddons(s.CommunityFolderPath, ADDONS_FILE, ref issues)
-    //    : new();
-    //  var p = LoadPrograms(ref issues);
-    //  var sc = LoadStartupConfigurations(ref issues);
-    //  Project ret = new()
-    //  {
-    //    Settings = s,
-    //    Addons = a,
-    //    Programs = p,
-    //    StartupConfigurations = sc
-    //  };
-    //  return ret;
-    //}
-
     public static BindingList<AddonView> LoadAddons(string communityFolder, string jsonAddonStateFile,
         ref List<string> issues)
     {
+      if (Directory.Exists(communityFolder) == false)
+        throw new ApplicationException($"Unable to find community folder at '{communityFolder}'");
+
       Dictionary<string, AddonCustomInfo> customInfos;
       try
       {
@@ -113,25 +99,31 @@ namespace CommunityManagerLib
       AddonInitializer nai = new AddonInitializer();
       List<AddonView> ret = nai.AnalyseAddons(communityFolder, customInfos, out List<string> errors);
       issues.AddRange(errors);
-      return ret.ToBindingList();
+      return ret.OrderBy(q => q.Title).ToBindingList();
     }
 
     public void SaveAddons() //todo rename parameter (everywhere in code)
     {
-      List<AddonCustomInfo> a = this.Addons
-        .OfType<SingleAddonView>()
-        .Select(q => q.Addon.State)
-        .ToList();
-      List<AddonCustomInfo> b = this.Addons
-        .OfType<GroupAddonView>()
-        .SelectMany(q => q.Addons.Select(p => p.Addon.State))
-        .ToList();
+      Dictionary<string, AddonCustomInfo> dict = new();
 
-      a.AddRange(b);
+      Dictionary<string, AddonCustomInfo> a = this.Addons
+        .OfType<SingleAddonView>()
+        .ToDictionary(
+          q => q.Addon.Source.Source,
+          q => q.Addon.State);
+      Dictionary<string, AddonCustomInfo> b = this.Addons
+        .OfType<GroupAddonView>()
+        .SelectMany(q => q.Addons)
+        .ToDictionary(
+          q => q.Addon.Source.Source,
+          q => q.Addon.State);
+
+      Trace.Assert(a.Keys.Intersect(b.Keys).Count() == 0);
+      dict = a.Concat(b).ToDictionary(q => q.Key, q => q.Value);
 
       try
       {
-        EJson.Save(a, ADDONS_FILE);
+        EJson.Save(dict, ADDONS_FILE);
       }
       catch (Exception ex)
       {
@@ -154,7 +146,17 @@ namespace CommunityManagerLib
       return ret.ToBindingList();
     }
 
-    // missing SavePrograms() ???
+    public void SavePrograms()
+    {
+      try
+      {
+        EJson.Save(this.Programs.ToList(), PROGRAM_FILE);
+      }
+      catch (Exception ex)
+      {
+        throw new ApplicationException($"Failed to save programs to file '{PROGRAM_FILE}'.", ex);
+      }
+    }
 
     public static BindingList<StartupConfiguration> LoadStartupConfigurations()
     {
@@ -264,6 +266,19 @@ namespace CommunityManagerLib
         .SelectMany(q => q.Tags);
 
       List<string> ret = a.Union(b).Union(c).Union(d).Distinct().OrderBy(q => q).ToList();
+      return ret;
+    }
+
+    public static bool AnyDataFileExists()
+    {
+      bool ret =
+        File.Exists(ADDONS_FILE)
+        ||
+        File.Exists(PROGRAM_FILE)
+        ||
+        File.Exists(STARTUP_CONFIGURATIONS_FILE)
+        ||
+        File.Exists(SETTINGS_FILE);
       return ret;
     }
 

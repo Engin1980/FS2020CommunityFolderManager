@@ -43,43 +43,9 @@ namespace CommunityManager.Windows
       if (e.PropertyName == nameof(Project.Settings.CommunityFolderPath)) isSettingsUpdated = true;
     }
 
-    private void SaveData()
-    {
-      try
-      {
-        this.Project.SaveSettings();
-        Message.ShowDialog("Saved.", "Changes have been saved.", Types.DialogResult.Ok);
-      }
-      catch (Exception ex)
-      {
-        Message.ShowDialog("Save failed.", "Changes have not been saved. Reason: " + ex.ToMessageString(),
-          Types.DialogResult.Ok);
-      }
-    }
-
-    private void LoadData()
-    {
-      if (Message.ShowDialog(
-        "Load",
-        "You will loose all unsaved changes. Are you sure you would like to reload the data?",
-        Types.DialogResult.Yes, Types.DialogResult.Cancel) == Types.DialogResult.Cancel) return;
-
-      try
-      {
-        this.Project.ReloadSettings();
-        this.Project.Settings.PropertyChanged += Settings_PropertyChanged;
-        Message.ShowDialog("Reloaded.", "Changes have been reloaded.", Types.DialogResult.Ok);
-      }
-      catch (Exception ex)
-      {
-        Message.ShowDialog("Reload failed.", "Changes have not been reloaded. Reason: " + ex.ToMessageString(),
-          Types.DialogResult.Ok);
-      }
-    }
-
     private void btnSave_Click(object sender, RoutedEventArgs e)
     {
-      SaveData();
+      GuiUtils.SaveSettings(this.Project, true);
     }
 
     private void btnClose_Click(object sender, RoutedEventArgs e)
@@ -90,7 +56,7 @@ namespace CommunityManager.Windows
 
     private void btnLoad_Click(object sender, RoutedEventArgs e)
     {
-      LoadData();
+      GuiUtils.ReloadSettings(this.Project, true, true);
     }
 
     private void btnBrowseCommunityFolder_Click(object sender, RoutedEventArgs e)
@@ -114,31 +80,12 @@ namespace CommunityManager.Windows
           "Community folder path seems to be updated. Reload addons?",
           Types.DialogResult.Yes, Types.DialogResult.No) == Types.DialogResult.Yes)
         {
-          this.ReloadAddons();
+          GuiUtils.ReloadAddons(this.Project, false, true);
         }
       }
 
       new MainWindow(this.Project).Show();
     }
 
-    private void ReloadAddons()
-    {
-      //TODO duplicit code with AddonOverview.xaml.cs
-      try
-      {
-        this.Project.ReloadAddons(out List<string> issues);
-        if (issues.Count == 0)
-          Message.ShowDialog("Reloaded.", "Changes have been reloaded.", Types.DialogResult.Ok);
-        else
-          Message.ShowDialog("Reloaded with issues",
-            "Changes have been reloaded. However, there were some issues:\n" + string.Join("\n\t", issues),
-            Types.DialogResult.Ok);
-      }
-      catch (Exception ex)
-      {
-        Message.ShowDialog("Reload failed.", "Changes have not been reloaded. Reason: " + ex.ToMessageString(),
-          Types.DialogResult.Ok);
-      }
-    }
   }
 }

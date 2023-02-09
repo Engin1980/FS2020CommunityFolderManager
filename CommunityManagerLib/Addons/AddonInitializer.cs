@@ -18,7 +18,7 @@ namespace CommunityManagerLib.Addons
       errors = new();
       List<SingleAddonView> tmp = new();
       List<AddonSource> addonSources;
-      
+
       addonSources = ScanForAddonSources(communityFolder, ref errors);
       foreach (AddonSource addonSource in addonSources)
       {
@@ -32,20 +32,23 @@ namespace CommunityManagerLib.Addons
       }
 
       string inactiveCommunityFolder = System.IO.Path.Combine(communityFolder, INACTIVE_ADDONS_FOLDER);
-      addonSources = ScanForAddonSources(inactiveCommunityFolder, ref errors);
-      foreach (AddonSource addonSource in addonSources)
+      if (System.IO.Directory.Exists(inactiveCommunityFolder))
       {
-        AddonManifestData manifest = AddonManifestData.Create(addonSource);
-        Addon a;
-        if (stateDict.ContainsKey(addonSource.Source))
-          a = new Addon(addonSource, manifest, stateDict[addonSource.Source], true, false);
-        else
-          a = new Addon(addonSource, manifest, new AddonCustomInfo(), true, true);
-        tmp.Add(new SingleAddonView(a));
+        addonSources = ScanForAddonSources(inactiveCommunityFolder, ref errors);
+        foreach (AddonSource addonSource in addonSources)
+        {
+          AddonManifestData manifest = AddonManifestData.Create(addonSource);
+          Addon a;
+          if (stateDict.ContainsKey(addonSource.Source))
+            a = new Addon(addonSource, manifest, stateDict[addonSource.Source], true, false);
+          else
+            a = new Addon(addonSource, manifest, new AddonCustomInfo(), true, true);
+          tmp.Add(new SingleAddonView(a));
+        }
       }
 
       List<AddonView> ret = BuildGroupedAddons(tmp);
-      
+
       return ret;
     }
 
@@ -89,7 +92,8 @@ namespace CommunityManagerLib.Addons
       ret.AddRange(linkSources);
 
       var missingManifestSources = ret
-        .Where(q => !System.IO.File.Exists(System.IO.Path.Combine(q.ManifestFilePath)));
+        .Where(q => !System.IO.File.Exists(System.IO.Path.Combine(q.ManifestFilePath)))
+        .ToList();
 
       var tmp = errors;
       missingManifestSources.ForEach(q => tmp.Add($"Addon source {q.Source} has missing manifest file. Cannot be loaded."));

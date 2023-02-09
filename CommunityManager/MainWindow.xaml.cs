@@ -101,22 +101,34 @@ namespace CommunityManager
 
     private void LoadProject()
     {
-      var p = Project.Load(out List<string> issues);
-      if (issues.Count > 0)
+      Project p;
+      if (!Project.AnyDataFileExists())
       {
-        string prompt = "There were issues during the app startup:\n\n" +
-          string.Join("\n\n", issues.Select(q => "\t(*) " + q).ToList());
-        var d = new Message.Data("FS2020 Community Manager ... Issues during start up.", prompt, Types.DialogResult.Ok)
+        Message.ShowDialog(
+          "No data exists.",
+          "There are no saved config data. Probably new app instalation? A new empty project will be created.\n\n" +
+          "Remember to set FS2020 Community folder location in settings.",
+          Types.DialogResult.Ok);
+        p = new Project()
         {
-          WindowHeight = 400,
-          WindowWidth = 600
+          Addons = new BindingList<CommunityManagerLib.Addons.AddonView>(),
+          Programs = new BindingList<CommunityManagerLib.Programs.Program>(),
+          Settings = new CommunityManagerLib.Settings.Settings(),
+          StartupConfigurations = new BindingList<StartupConfiguration>()
         };
-        this.Hide();
-        new Message(d).ShowDialog();
-        this.Show();
-        p ??= Project.CreateEmpty();
+        GuiUtils.SaveSettings(p, false);
+        GuiUtils.SaveAddons(p, false);
+        GuiUtils.SavePrograms(p, false);
+        GuiUtils.SaveStartupConfigurations(p, false);
       }
-
+      else
+      {
+        p = new Project();
+        GuiUtils.ReloadSettings(p, false, false);
+        GuiUtils.ReloadAddons(p, false, false);
+        GuiUtils.ReloadPrograms(p, false, false);
+        GuiUtils.ReloadStartupConfigurations(p, false, false);
+      }
       this.Project = p;
       RebuildGrid();
     }

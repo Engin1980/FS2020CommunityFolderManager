@@ -41,16 +41,7 @@ namespace CommunityManager.Windows
 
     private void btnSave_Click(object sender, RoutedEventArgs e)
     {
-      try
-      {
-        this.Project.SaveStartupConfigurations();
-        Message.ShowDialog("Saved.", "Changes have been saved.", Types.DialogResult.Ok);
-      }
-      catch (Exception ex)
-      {
-        Message.ShowDialog("Save failed.", "Changes have not been saved. Reason: " + ex.ToMessageString(),
-          Types.DialogResult.Ok);
-      }
+      GuiUtils.SaveStartupConfigurations(this.Project, true);
     }
 
     private void btnClose_Click(object sender, RoutedEventArgs e)
@@ -130,26 +121,7 @@ namespace CommunityManager.Windows
 
     private void btnLoad_Click(object sender, RoutedEventArgs e)
     {
-      LoadData();
-    }
-
-    private void LoadData()
-    {
-      if (Message.ShowDialog(
-        "Load",
-        "You will loose all unsaved changes. Are you sure you would like to reload the data?",
-        Types.DialogResult.Yes, Types.DialogResult.Cancel) == Types.DialogResult.Cancel) return;
-
-      try
-      {
-        this.Project.ReloadStartupConfigurations();
-        Message.ShowDialog("Reloaded.", "Changes have been reloaded.", Types.DialogResult.Ok);
-      }
-      catch (Exception ex)
-      {
-        Message.ShowDialog("Reload failed.", "Changes have not been reloaded. Reason: " + ex.ToMessageString(),
-          Types.DialogResult.Ok);
-      }
+      GuiUtils.ReloadStartupConfigurations(this.Project, true, true);
     }
 
     private void TagPanel_MouseDoubleClick(object sender, MouseButtonEventArgs e)

@@ -5,6 +5,11 @@ namespace CommunityManagerLib.Addons
 {
   public class AddonCustomInfo : NotifyPropertyChangedBase
   {
+    public AddonCustomInfo()
+    {
+      this.Tags = new();
+    }
+
     public string? CustomTitle
     {
       get => GetProperty<string?>(nameof(CustomTitle));

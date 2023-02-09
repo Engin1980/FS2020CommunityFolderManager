@@ -12,17 +12,28 @@
     <converters:PositiveIntToBoolConverter x:Key="PositiveIntToBoolConverter"/>
     <converters:NonemptyStringToVisibilityConverter x:Key="NonemptyStringToVisibilityConverter" />
     <converters:ObjectNotNullToBoolConverter x:Key="ObjectNotNullToBoolConverter" />
+    <converters:NegateBoolConverter x:Key="NegateBoolConverter" />
+    <converters:BoolNegatedToVisibilityConverter x:Key="BoolNegatedToVisibilityConverter" />
+    <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    <Style x:Key="ItemIcon" TargetType="Label">
+      <Setter Property="Margin" Value="2 0 2 0" />
+      <Setter Property="Padding" Value="0"/>
+    </Style>
   </Window.Resources>
   <DockPanel>
     <DockPanel>
       <DockPanel DockPanel.Dock="Top" LastChildFill="False">
         <Button x:Name="btnCustomTitle" DockPanel.Dock="Left" 
                 Content="Title" Click="btnCustomTitle_Click" 
-                IsEnabled="{Binding SelectedItem, ElementName=lstAddonStates, Converter={StaticResource ObjectNotNullToBoolConverter}}" />
+                IsEnabled="{Binding SelectedItem, ElementName=lstAddonViews, Converter={StaticResource ObjectNotNullToBoolConverter}}" />
 
         <Button x:Name="btnAssignTags"  DockPanel.Dock="Left" 
                 Content="Tags" Click="btnAssignTags_Click"             
-                IsEnabled="{Binding SelectedItem, ElementName=lstAddonStates, Converter={StaticResource ObjectNotNullToBoolConverter}}" />
+                IsEnabled="{Binding SelectedItem, ElementName=lstAddonViews, Converter={StaticResource ObjectNotNullToBoolConverter}}" />
+
+        <Button x:Name="btnGroup"  DockPanel.Dock="Left" 
+                Content="Groups" Click="btnGroup_Click"            
+                IsEnabled="{Binding SelectedItem, ElementName=lstAddonViews, Converter={StaticResource ObjectNotNullToBoolConverter}}" />
 
         <Button x:Name="btnClose" Content="Close" DockPanel.Dock="Right" 
                 Click="btnClose_Click"/>
@@ -31,7 +42,7 @@
         <Button x:Name="btnLoad" Content="Reload" DockPanel.Dock="Right" 
               Click="btnLoad_Click"/>
       </DockPanel>
-      <ListView x:Name="lstAddonStates" ItemsSource="{Binding}">
+      <ListView x:Name="lstAddonViews" ItemsSource="{Binding}" HorizontalContentAlignment="Stretch">
         <ListView.Template>
           <ControlTemplate>
             <ScrollViewer>
@@ -42,26 +53,53 @@
         <ListView.ItemTemplate>
           <DataTemplate>
             <StackPanel>
-              <Label x:Name="lblDisplayTitle" 
-                     MouseDoubleClick="lblDisplayTitle_MouseDoubleClick"
-                     Tag="{Binding Source}">
-                <Label.Content>
-                  <TextBlock  FontWeight="Bold" FontSize="20" Text="{Binding Title}" />
-                </Label.Content>
-              </Label>
-              <StackPanel Orientation="Horizontal" Margin="16 4 4 4">
+              <DockPanel DockPanel.Dock="Top">
+                <Label DockPanel.Dock="Right" Style="{StaticResource ItemIcon}"
+                       Visibility="{Binding IsGrouped,Converter={StaticResource BoolToVisibilityConverter}}">
+                  <Label.Content>
+                    <Image Source="../Images/Icons/Actions-tab-duplicate-icon.png" Height="24" />
+                  </Label.Content>
+                </Label>
+                <Label DockPanel.Dock="Right" Style="{StaticResource ItemIcon}"
+                       Visibility="{Binding IsActive,Converter={StaticResource BoolNegatedToVisibilityConverter}}">
+                  <Label.Content>
+                    <Image Source="../Images/Icons/Button-Blank-Yellow-icon.png" Height="24" />
+                  </Label.Content>
+                </Label>
+                <Label DockPanel.Dock="Right" Style="{StaticResource ItemIcon}"
+                       Visibility="{Binding IsActive,Converter={StaticResource BoolToVisibilityConverter}}">
+                  <Label.Content>
+                    <Image Source="../Images/Icons/Button-Blank-Green-icon.png" Height="24" />
+                  </Label.Content>
+                </Label>
+                <Label DockPanel.Dock="Right" Style="{StaticResource ItemIcon}"
+                       Visibility="{Binding IsNew,Converter={StaticResource BoolToVisibilityConverter}}">
+                  <Label.Content>
+                    <Image Source="../Images/Icons/new-icon.png" Height="24" />
+                  </Label.Content>
+                </Label>
+                <Label x:Name="lblDisplayTitle" 
+                       MouseDoubleClick="lblDisplayTitle_MouseDoubleClick"
+                       Tag="{Binding SourceName}" >
+                  <Label.Content>
+                    <TextBlock  FontWeight="Bold" FontSize="20" Text="{Binding Title}" />
+                  </Label.Content>
+                </Label>
+              </DockPanel>
+              <StackPanel  DockPanel.Dock="Top" Orientation="Horizontal" Margin="16 4 4 4">
                 <TextBlock Text=".\" />
-                <TextBlock Text="{Binding Source}" />
+                <TextBlock Text="{Binding SourceName}" />
               </StackPanel>
-              <StackPanel Orientation="Horizontal" Margin="16 4 4 4" 
-                          Visibility="{Binding DisplayCreator, Converter={StaticResource NonemptyStringToVisibilityConverter}}" >
+              <StackPanel  DockPanel.Dock="Top"
+                           Orientation="Horizontal" Margin="16 4 4 4" 
+                           Visibility="{Binding Author, Converter={StaticResource NonemptyStringToVisibilityConverter}}" >
                 <TextBlock Text="by " />
                 <TextBlock Text="{Binding Author}" />
               </StackPanel>
-              <controls:TagPanel  
-                Tag="{Binding Path=DataContext.Addon.Folder, RelativeSource={RelativeSource AncestorType=StackPanel}}" 
-                DataContext="{Binding Tags}"
-                MouseDoubleClick="TagPanel_MouseDoubleClick" Margin="16 4 4 4"/>
+              <controls:TagPanel DockPanel.Dock="Top"
+                                 Tag="{Binding Path=DataContext.SourceName, RelativeSource={RelativeSource AncestorType=StackPanel}}" 
+                                 DataContext="{Binding Tags}"
+                                 MouseDoubleClick="TagPanel_MouseDoubleClick" Margin="16 4 4 4"/>
             </StackPanel>
           </DataTemplate>
         </ListView.ItemTemplate>

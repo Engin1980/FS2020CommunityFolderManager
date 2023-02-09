@@ -39,9 +39,10 @@ namespace CommunityManager.Windows
     public Input()
     {
       InitializeComponent();
+      txtInput.Focus();
     }
 
-    public Input(Data data):this()
+    public Input(Data data) : this()
     {
       this.DataContext = data ?? throw new ArgumentNullException(nameof(data));
     }
@@ -56,6 +57,14 @@ namespace CommunityManager.Windows
     {
       (this.DataContext as Data)!.DialogResult = Types.DialogResult.Cancel;
       this.Hide();
+    }
+
+    private void txtInput_KeyDown(object sender, KeyEventArgs e)
+    {
+      if (e.Key == Key.Enter)
+        btnApply_Click(this, new RoutedEventArgs());
+      else if (e.Key == Key.Escape)
+        btnCancel_Click(this, new RoutedEventArgs());
     }
   }
 }

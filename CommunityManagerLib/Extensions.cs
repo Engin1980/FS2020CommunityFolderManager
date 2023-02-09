@@ -11,6 +11,11 @@ namespace CommunityManagerLib
 {
   public static class Extensions
   {
+    public static IEnumerable<T> Reversed<T>(this IEnumerable<T> enumerable)
+    {
+      return enumerable.Reverse();
+    }
+
     public static IEnumerable<T> ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
     {
       foreach (var item in enumerable)

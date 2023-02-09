@@ -10,11 +10,15 @@ namespace CommunityManagerLib.Addons
 
     public List<SingleAddonView> Addons { get; set; }
 
-    public override string Author => string.Join(", ", Addons.Select(q => q.Addon.Manifest.GetAuthor()));
+    public override string Author => string.Join(", ", Addons.Select(q => q.Addon.Manifest.GetAuthor()).Distinct());
 
-    public override string Source => $"(group of {this.Addons.Count} addons)";
+    public override string SourceName => $"(group of {this.Addons.Count} addons)";
 
-    public override BindingList<string> Tags => this.Addons.First().Tags;
+    public override List<string> Tags
+    {
+      get => this.Addons.First().Tags;
+      set => this.Addons.ForEach(q => q.Tags = value);
+    }
 
     public override string Title
     {
@@ -22,12 +26,16 @@ namespace CommunityManagerLib.Addons
       set => this.Addons.ForEach(q => q.Addon.State.GroupGuid = value);
     }
 
-    public GroupAddonView(List<SingleAddonView> addons, string key)
+    public GroupAddonView(IEnumerable<SingleAddonView> addons, string key)
     {
       Trace.Assert(addons is not null);
       Trace.Assert(addons!.Count() > 1);
-      this.Addons = addons!;
+      this.Addons = addons!.ToList();
       this.Addons.ForEach(q => q.Addon.State.GroupGuid = key);
     }
+
+    public override bool IsActive => this.Addons.Any(q => q.IsActive);
+    public override bool IsNew => this.Addons.Any(q => q.IsNew);
+    public override bool IsGrouped => true;
   }
 }
