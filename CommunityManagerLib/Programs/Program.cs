@@ -65,10 +65,14 @@ namespace CommunityManagerLib.Programs
       set => base.UpdateProperty(nameof(StartupDelay), value);
     }
 
-    public List<String> Tags
+    public List<string> Tags
     {
       get => base.GetProperty<List<String>>(nameof(Tags))!;
-      set => base.UpdateProperty(nameof(Tags), value);
+      set
+      {
+        value.Sort();
+        base.UpdateProperty(nameof(Tags), value);
+      }
     }
   }
 }

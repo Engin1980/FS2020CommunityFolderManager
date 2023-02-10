@@ -19,10 +19,11 @@ namespace CommunityManagerLib
 {
   public class Project : NotifyPropertyChangedBase
   {
-    private const string SETTINGS_FILE = "data_config.json";
-    private const string PROGRAM_FILE = "data_programs.json";
-    private const string ADDONS_FILE = "data_addons.json";
-    private const string STARTUP_CONFIGURATIONS_FILE = "data_startup_configurations.json";
+    private const string DATA_FOLDER = "data\\";
+    private const string SETTINGS_FILE = "config.json";
+    private const string PROGRAM_FILE = "programs.json";
+    private const string ADDONS_FILE = "addons.json";
+    private const string STARTUP_CONFIGURATIONS_FILE = "startup_configurations.json";
 
     private static class EJson
     {
@@ -89,7 +90,7 @@ namespace CommunityManagerLib
       Dictionary<string, AddonCustomInfo> customInfos;
       try
       {
-        customInfos = EJson.Load<Dictionary<string, AddonCustomInfo>>(ADDONS_FILE);
+        customInfos = EJson.Load<Dictionary<string, AddonCustomInfo>>(DATA_FOLDER + ADDONS_FILE);
       }
       catch (Exception ex)
       {
@@ -123,7 +124,7 @@ namespace CommunityManagerLib
 
       try
       {
-        EJson.Save(dict, ADDONS_FILE);
+        EJson.Save(dict, DATA_FOLDER + ADDONS_FILE);
       }
       catch (Exception ex)
       {
@@ -136,11 +137,11 @@ namespace CommunityManagerLib
       List<Program> ret;
       try
       {
-        ret = EJson.Load<List<Program>>(PROGRAM_FILE);
+        ret = EJson.Load<List<Program>>(DATA_FOLDER + PROGRAM_FILE);
       }
       catch (Exception ex)
       {
-        throw new ApplicationException($"Failed to load {PROGRAM_FILE}.", ex);
+        throw new ApplicationException($"Failed to load {DATA_FOLDER + PROGRAM_FILE}.", ex);
       }
 
       return ret.ToBindingList();
@@ -150,11 +151,11 @@ namespace CommunityManagerLib
     {
       try
       {
-        EJson.Save(this.Programs.ToList(), PROGRAM_FILE);
+        EJson.Save(this.Programs.ToList(), DATA_FOLDER + PROGRAM_FILE);
       }
       catch (Exception ex)
       {
-        throw new ApplicationException($"Failed to save programs to file '{PROGRAM_FILE}'.", ex);
+        throw new ApplicationException($"Failed to save programs to file '{DATA_FOLDER + PROGRAM_FILE}'.", ex);
       }
     }
 
@@ -163,11 +164,11 @@ namespace CommunityManagerLib
       List<StartupConfiguration> ret;
       try
       {
-        ret = EJson.Load<List<StartupConfiguration>>(STARTUP_CONFIGURATIONS_FILE);
+        ret = EJson.Load<List<StartupConfiguration>>(DATA_FOLDER + STARTUP_CONFIGURATIONS_FILE);
       }
       catch (Exception ex)
       {
-        throw new ApplicationException($"Failed to load {STARTUP_CONFIGURATIONS_FILE}.", ex);
+        throw new ApplicationException($"Failed to load {DATA_FOLDER + STARTUP_CONFIGURATIONS_FILE}.", ex);
       }
 
       return ret.ToBindingList();
@@ -177,11 +178,11 @@ namespace CommunityManagerLib
     {
       try
       {
-        EJson.Save(this.StartupConfigurations.ToList(), STARTUP_CONFIGURATIONS_FILE);
+        EJson.Save(this.StartupConfigurations.ToList(), DATA_FOLDER + STARTUP_CONFIGURATIONS_FILE);
       }
       catch (Exception ex)
       {
-        throw new ApplicationException($"Failed to store starupt configurations to '{STARTUP_CONFIGURATIONS_FILE}.", ex);
+        throw new ApplicationException($"Failed to store starupt configurations to '{DATA_FOLDER + STARTUP_CONFIGURATIONS_FILE}.", ex);
       }
     }
 
@@ -190,11 +191,11 @@ namespace CommunityManagerLib
       Settings.Settings ret;
       try
       {
-        ret = EJson.Load<Settings.Settings>(SETTINGS_FILE);
+        ret = EJson.Load<Settings.Settings>(DATA_FOLDER + SETTINGS_FILE);
       }
       catch (Exception ex)
       {
-        throw new ApplicationException($"Failed to load {SETTINGS_FILE}. Settings & Addon list will be empty.", ex);
+        throw new ApplicationException($"Failed to load {DATA_FOLDER + SETTINGS_FILE}. Settings & Addon list will be empty.", ex);
       }
 
       return ret;
@@ -204,11 +205,11 @@ namespace CommunityManagerLib
     {
       try
       {
-        EJson.Save(this.Settings, SETTINGS_FILE);
+        EJson.Save(this.Settings, DATA_FOLDER + SETTINGS_FILE);
       }
       catch (Exception ex)
       {
-        throw new ApplicationException($"Failed to save settings to '{SETTINGS_FILE}'.", ex);
+        throw new ApplicationException($"Failed to save settings to '{DATA_FOLDER + SETTINGS_FILE}'.", ex);
       }
     }
 
@@ -219,7 +220,7 @@ namespace CommunityManagerLib
     public void ReloadAddons(out List<string> issues)
     {
       issues = new();
-      this.Addons = Project.LoadAddons(this.Settings.CommunityFolderPath, ADDONS_FILE, ref issues);
+      this.Addons = Project.LoadAddons(this.Settings.CommunityFolderPath, DATA_FOLDER + ADDONS_FILE, ref issues);
     }
 
     public void ReloadPrograms()
@@ -271,14 +272,16 @@ namespace CommunityManagerLib
 
     public static bool AnyDataFileExists()
     {
+      if (System.IO.Directory.Exists(DATA_FOLDER) == false)
+        System.IO.Directory.CreateDirectory(DATA_FOLDER);
       bool ret =
-        File.Exists(ADDONS_FILE)
+        File.Exists(DATA_FOLDER + ADDONS_FILE)
         ||
-        File.Exists(PROGRAM_FILE)
+        File.Exists(DATA_FOLDER + PROGRAM_FILE)
         ||
-        File.Exists(STARTUP_CONFIGURATIONS_FILE)
+        File.Exists(DATA_FOLDER + STARTUP_CONFIGURATIONS_FILE)
         ||
-        File.Exists(SETTINGS_FILE);
+        File.Exists(DATA_FOLDER + SETTINGS_FILE);
       return ret;
     }
 

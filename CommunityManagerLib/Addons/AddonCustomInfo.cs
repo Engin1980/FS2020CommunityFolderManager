@@ -26,7 +26,11 @@ namespace CommunityManagerLib.Addons
     public List<string> Tags
     {
       get => GetProperty<List<string>>(nameof(Tags))!;
-      set => UpdateProperty(nameof(Tags), value);
+      set
+      {
+        value.Sort();
+        UpdateProperty(nameof(Tags), value);
+      }
     }
 
     public string? Note

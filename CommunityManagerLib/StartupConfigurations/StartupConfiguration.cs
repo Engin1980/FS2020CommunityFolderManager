@@ -22,7 +22,11 @@ namespace CommunityManagerLib.StartupConfigurations
     public List<string> Tags
     {
       get => base.GetProperty<List<string>>(nameof(Tags))!;
-      set => base.UpdateProperty(nameof(Tags), value);
+      set
+      {
+        value.Sort();
+        base.UpdateProperty(nameof(Tags), value);
+      }
     }
   }
 }
