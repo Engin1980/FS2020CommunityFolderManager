@@ -66,7 +66,10 @@ namespace CommunityManager.Windows
         Multiselect = false,
         Title = "Select executable file..."
       };
+      dialog.Filters.Add(new CommonFileDialogFilter("Selectable files", "exe;lnk;url;bat"));
       dialog.Filters.Add(new CommonFileDialogFilter("Executable file", "exe"));
+      dialog.Filters.Add(new CommonFileDialogFilter("URL files", "url"));
+      dialog.Filters.Add(new CommonFileDialogFilter("LNK files", "lnk"));
       dialog.Filters.Add(new CommonFileDialogFilter("Batch file", "bat"));
       dialog.Filters.Add(new CommonFileDialogFilter("All files", "*"));
       var res = dialog.ShowDialog();

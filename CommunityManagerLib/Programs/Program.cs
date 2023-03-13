@@ -74,5 +74,8 @@ namespace CommunityManagerLib.Programs
         base.UpdateProperty(nameof(Tags), value);
       }
     }
+
+    public bool IsDirectlyExecutable => 
+      this.Path.ToLower().EndsWith(".exe") || this.Path.ToLower().EndsWith(".bat");
   }
 }

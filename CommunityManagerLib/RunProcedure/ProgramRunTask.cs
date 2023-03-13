@@ -32,13 +32,24 @@ namespace CommunityManagerLib.RunProcedure
       if (delayLeft.TotalMilliseconds > 0)
         System.Threading.Thread.Sleep((int)delayLeft.TotalMilliseconds);
 
-      ProcessStartInfo psi = new ProcessStartInfo()
+      ProcessStartInfo psi;
+      if (Program.IsDirectlyExecutable)
+        psi = new()
+        {
+          FileName = Program.Path,
+          WorkingDirectory = System.IO.Path.GetDirectoryName(Program.Path),
+          Arguments = Program.Arguments
+        };
+      else
       {
-        FileName = Program.Path,
-        WorkingDirectory = System.IO.Path.GetDirectoryName(Program.Path),
-        Arguments = Program.Arguments
-      };
-      Process p = new Process()
+        psi = new()
+        {
+          FileName = "start",
+          WorkingDirectory = System.IO.Path.GetDirectoryName(Program.Path),
+          Arguments = $"{Program.Path} \"{Program.Arguments}\""
+        };
+      }
+      Process p = new()
       {
         StartInfo = psi
       };
