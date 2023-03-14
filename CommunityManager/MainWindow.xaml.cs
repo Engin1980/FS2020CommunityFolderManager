@@ -28,6 +28,7 @@ namespace CommunityManager
   public partial class MainWindow : Window
   {
     public Project Project { get; set; }
+    private bool closingShouldQuitApplication = true;
 
     public MainWindow()
     {
@@ -77,6 +78,7 @@ namespace CommunityManager
 
     private void btnStartSc_Click(object sender, RoutedEventArgs e)
     {
+      this.closingShouldQuitApplication = false;
       Button btn = (Button)sender;
       StartupConfiguration sc = (StartupConfiguration)btn.Tag;
       new Windows.Run(Project, sc).Show();
@@ -90,7 +92,8 @@ namespace CommunityManager
 
     private void btnQuit_Click(object sender, RoutedEventArgs e)
     {
-      Application.Current.Shutdown();
+      if (this.closingShouldQuitApplication)
+        Application.Current.Shutdown();
     }
 
     private void btnAddonOverview_Click(object sender, RoutedEventArgs e)
