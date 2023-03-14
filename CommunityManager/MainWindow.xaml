@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CommunityManager"
         mc:Ignorable="d"
-        Title="MainWindow" Height="550" Width="800" Loaded="Window_Loaded">
+        Title="MSFS2020 Community Folder &amp; Program Manager" Height="550" Width="800" Loaded="Window_Loaded">
   <DockPanel>
     <Label DockPanel.Dock="Top" HorizontalAlignment="Center">
       <Label.Content>

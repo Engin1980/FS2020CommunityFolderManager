@@ -6,10 +6,12 @@
         xmlns:local="clr-namespace:CommunityManager.Windows"
         xmlns:controls="clr-namespace:CommunityManager.Controls"
         xmlns:converters="clr-namespace:CommunityManager.Converters"
+        xmlns:convertersSpecific="clr-namespace:CommunityManager.Converters.Specific"
         mc:Ignorable="d"
         Title="ProgramOverview" Height="450" Width="800" Closed="Window_Closed">
   <Window.Resources>
     <converters:PositiveIntToBoolConverter x:Key="PositiveIntToBoolConverter"/>
+    <convertersSpecific:FileExistToBackgroundConverter x:Key="FileExistToBackgroundConverter" />
   </Window.Resources>
   <DockPanel>
     <DockPanel DockPanel.Dock="Top" LastChildFill="False">
@@ -29,7 +31,7 @@
       <Button x:Name="btnLoad" Content="Reload" DockPanel.Dock="Right" 
               Click="btnLoad_Click"/>
     </DockPanel>
-    <ListView x:Name="lstPrograms" ItemsSource="{Binding}">
+    <ListView x:Name="lstPrograms" ItemsSource="{Binding}" HorizontalContentAlignment="Stretch" >
       <ListView.Template>
         <ControlTemplate>
           <ScrollViewer>
@@ -39,7 +41,7 @@
       </ListView.Template>
       <ListView.ItemTemplate>
         <DataTemplate>
-          <StackPanel>
+          <StackPanel Background="{Binding Path, Converter={StaticResource FileExistToBackgroundConverter}}">
             <Label x:Name="lblName" Content="{Binding DisplayTitle}" Tag="{Binding Path}" FontWeight="Bold" MouseDoubleClick="lblName_MouseDoubleClick" />
             <TextBlock Text="{Binding Path}" Margin="32 4 4 4" />
             <StackPanel Orientation="Horizontal" Margin="32 4 4 4">

@@ -8,7 +8,6 @@ namespace CommunityManagerLib.Addons
 {
   public abstract class AddonView : NotifyPropertyChangedBase
   {
-
     public abstract string Author { get; }
     public abstract string SourceName { get; }
     public abstract List<string> Tags { get; set; }
