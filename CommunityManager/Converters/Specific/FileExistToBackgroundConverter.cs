@@ -16,8 +16,15 @@ namespace CommunityManager.Converters.Specific
     {
       string fileName = (string)value;
       bool exist = System.IO.File.Exists(fileName);
-      SolidColorBrush ret = new SolidColorBrush(
-        exist ? Colors.White : Colors.Pink);
+
+      SolidColorBrush ret;
+      if (exist)
+      {
+        ret = new SolidColorBrush(Colors.Transparent);
+      } else
+      {
+        ret = new SolidColorBrush(Colors.Pink);
+      }
       return ret;
     }
 
