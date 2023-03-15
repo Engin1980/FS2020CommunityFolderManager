@@ -5,14 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CommunityManager.Windows"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="{Binding WindowHeight}" Width="{Binding WindowWidth}" Loaded="Window_Loaded"
-        ShowInTaskbar="False">
+        Title="{Binding Title}"
+        Height="{Binding WindowHeight,Mode=TwoWay,FallbackValue=1250}" 
+        Width="{Binding WindowWidth,Mode=TwoWay,FallbackValue=1400}" Loaded="Window_Loaded"
+        ShowInTaskbar="False" Initialized="Window_Initialized">
   <DockPanel>
-    <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-      <Label Content="{Binding WindowHeight}" />
-      <Label Content=" x " />
-      <Label Content="{Binding WindowWidth}" />
-    </StackPanel>
     <DockPanel DockPanel.Dock="Bottom" LastChildFill="False">
       <ItemsControl ItemsSource="{Binding AvailableDialogResults}" x:Name="itmButtons">
         <ItemsControl.ItemsPanel>
