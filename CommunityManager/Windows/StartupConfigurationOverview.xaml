@@ -28,6 +28,12 @@
       <Button x:Name="btnDelete"  DockPanel.Dock="Left"
               Content="Delete" Click="btnDelete_Click" 
               IsEnabled="{Binding SelectedItem, ElementName=lstStartupConfigurations, Converter={StaticResource ObjectNotNullToBoolConverter}}" />
+      <Button x:Name="btnUp"  DockPanel.Dock="Left"
+              Content="▲" Click="btnMoveUp_Click" 
+              IsEnabled="{Binding SelectedItem, ElementName=lstStartupConfigurations, Converter={StaticResource ObjectNotNullToBoolConverter}}" />
+      <Button x:Name="btnDown"  DockPanel.Dock="Left"
+              Content="▼" Click="btnMoveDown_Click" 
+              IsEnabled="{Binding SelectedItem, ElementName=lstStartupConfigurations, Converter={StaticResource ObjectNotNullToBoolConverter}}" />
       <Button x:Name="btnClose" Content="Save &amp; Close" DockPanel.Dock="Right" 
               Click="btnClose_Click"/>
       <Button x:Name="btnLoad" Content="Reload" DockPanel.Dock="Right" 

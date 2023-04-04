@@ -51,7 +51,10 @@ namespace CommunityManager.Windows
       {
         Title = "New Startup Configuration"
       };
-      this.Project.StartupConfigurations.Add(sc);
+      if (lstStartupConfigurations.SelectedIndex >= 0 && lstStartupConfigurations.SelectedIndex < this.Project.StartupConfigurations.Count - 1)
+        this.Project.StartupConfigurations.Insert(lstStartupConfigurations.SelectedIndex + 1, sc);
+      else
+        this.Project.StartupConfigurations.Add(sc);
       UpdateTitle(sc);
     }
 
@@ -103,6 +106,28 @@ namespace CommunityManager.Windows
         .Cast<StartupConfiguration>()
         .ToList()
         .ForEach(q => Project.StartupConfigurations.Remove(q));
+    }
+
+    private void btnMoveUp_Click(object sender, RoutedEventArgs e)
+    {
+      int index = lstStartupConfigurations.SelectedIndex;
+      if (index == 0) return;
+
+      var selected = this.Project.StartupConfigurations[index];
+      this.Project.StartupConfigurations.RemoveAt(index);
+      this.Project.StartupConfigurations.Insert(index - 1, selected);
+      lstStartupConfigurations.SelectedIndex = index - 1;
+    }
+
+    private void btnMoveDown_Click(object sender, RoutedEventArgs e)
+    {
+      int index = lstStartupConfigurations.SelectedIndex;
+      if (index == this.Project.StartupConfigurations.Count - 1) return;
+
+      var selected = this.Project.StartupConfigurations[index];
+      this.Project.StartupConfigurations.RemoveAt(index);
+      this.Project.StartupConfigurations.Insert(index + 1, selected);
+      lstStartupConfigurations.SelectedIndex = index + 1;
     }
 
     private void Window_Closed(object sender, EventArgs e)
