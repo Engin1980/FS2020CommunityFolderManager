@@ -43,6 +43,11 @@
                 IsEnabled="{Binding SelectedItem, ElementName=lstAddonViews, Converter={StaticResource ObjectNotNullToBoolConverter}}" />
 
         <TextBox x:Name="txtFilter" DockPanel.Dock="Left" Width="120" Height="34" Margin="4 0 4 0" Padding="8" TextChanged="txtFilter_TextChanged" KeyUp="txtFilter_KeyUp" />
+        <CheckBox x:Name="chkNew" DockPanel.Dock="Left" Margin="4 16 0 0" 
+                  Checked="chkNew_Checked"
+                  Unchecked="chkNew_Checked">
+          <TextBlock>New only</TextBlock>
+        </CheckBox>
 
         <Button x:Name="btnClose" Content="Save &amp; Close" DockPanel.Dock="Right" 
                 Click="btnClose_Click"/>

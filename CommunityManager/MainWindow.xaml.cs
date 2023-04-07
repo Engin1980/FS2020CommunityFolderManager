@@ -92,8 +92,7 @@ namespace CommunityManager
 
     private void btnQuit_Click(object sender, RoutedEventArgs e)
     {
-      if (this.closingShouldQuitApplication)
-        Application.Current.Shutdown();
+      this.Close();
     }
 
     private void btnAddonOverview_Click(object sender, RoutedEventArgs e)
@@ -160,6 +159,12 @@ namespace CommunityManager
     {
       new StartupConfigurationOverview(this.Project).Show();
       this.Hide();
+    }
+
+    private void Window_Closed(object sender, EventArgs e)
+    {
+      if (this.closingShouldQuitApplication)
+        Application.Current.Shutdown();
     }
   }
 }

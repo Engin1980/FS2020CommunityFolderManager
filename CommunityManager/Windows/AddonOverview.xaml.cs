@@ -76,7 +76,7 @@ namespace CommunityManager.Windows
       Input.Data data = new(
         "Adjust Note...",
         "Set the note for the addon:",
-        addonView.Note
+        addonView.Note!
         )
       {
         WindowHeight = 100,
@@ -160,71 +160,44 @@ namespace CommunityManager.Windows
     private void btnGroup_Click(object sender, RoutedEventArgs e)
     {
       var addonViews = this.lstAddonViews.SelectedItems.Cast<AddonView>().ToList();
-      switch (addonViews.Count)
+      if (addonViews.Count == 0)
       {
-        case 0:
-          Message.ShowDialog("Unable.", "At least item must be selected.", Types.DialogResult.Ok);
-          break;
-        case 1:
-          if (addonViews.Single() is not GroupAddonView)
-            Message.ShowDialog("Unable.", "The only selected item is not grouped set of addons to be ungrouped.", Types.DialogResult.Ok);
-          else
-          {
-            if (Message.ShowDialog("Really?", $"You are going ungroup {addonViews.Count} addons. Are you sure?",
-              Types.DialogResult.Yes, Types.DialogResult.No) == Types.DialogResult.Yes)
-            {
-              GroupAddonView gav = (GroupAddonView)addonViews.Single();
-              var tmp = gav.Addons;
-              int index = Project.Addons.IndexOf(gav);
-              Project.Addons.Remove(gav);
-              tmp.Reversed().ForEach(q => Project.Addons.Insert(index, q));
-              Message.ShowDialog("Done", $"Addons ungrouped.");
-            }
-          }
-          break;
-        default:
-          if (addonViews.Any(q => q is GroupAddonView))
-            Message.ShowDialog("Unable.", "The selected set contains already grouped items. Cannot group grouped items again.", Types.DialogResult.Ok);
-          else
-          {
-            if (Message.ShowDialog("Really?", $"You are going to group together {addonViews.Count} addons. Their tags will be intersected. Are you sure?",
-              Types.DialogResult.Yes, Types.DialogResult.No) == Types.DialogResult.Yes)
-            {
-              string groupName = $"{addonViews.First().Title} + {addonViews.Count - 1} other";
-              Input.Data id = new("New group name", "Enter the name of the new group:", groupName);
-              new Input(id).ShowDialog();
-              if (id.DialogResult == Types.DialogResult.Ok)
-                groupName = id.Value;
-              var tmp = addonViews.Cast<SingleAddonView>();
-              GroupAddonView gav = new(tmp, groupName);
-              int index = this.Project.Addons.IndexOf(tmp.First());
-              tmp.ForEach(q => this.Project.Addons.Remove(q));
-              this.Project.Addons.Insert(index, gav);
-              Message.ShowDialog("Done", $"Group with name '{gav.Title}' created.", Types.DialogResult.Ok);
-            }
-          }
-          break;
+        Message.ShowDialog("Select at least one addon", 
+          "At least one addon item must be selected.", Types.DialogResult.Ok);
+        return;
       }
+      else if ((addonViews.Count > 1 && addonViews.Any(q => q is GroupAddonView))
+        || (addonViews.Count == 1 && addonViews.First() is not GroupAddonView))
+      {
+        Message.ShowDialog("Correct selected addons",
+          "There must be exactly one grouped addon selected, or one or more non-group addons selected.",
+          Types.DialogResult.Ok);
+          return;
+      }
+
+      GroupAddonView gav;
+      if (addonViews.First() is SingleAddonView)
+      {
+        var tmp = addonViews.Cast<SingleAddonView>();
+        string title = addonViews.First().Title;
+        if (addonViews.Count > 1) title += " + " + addonViews.Count.ToString();
+        gav = new(tmp, title);
+        int index = this.Project.Addons.IndexOf(tmp.First());
+        tmp.ForEach(q => this.Project.Addons.Remove(q));
+        this.Project.Addons.Insert(index, gav);
+      } else
+        gav = (GroupAddonView) addonViews.First();
+
+
+      GroupManager frm = new GroupManager(this.Project.Addons, gav);
+      frm.ShowDialog();
+
       listCollectionView.Refresh();
     }
 
     private void txtFilter_TextChanged(object sender, TextChangedEventArgs e)
     {
-      if (txtFilter.Text.Trim().Length > 0)
-      {
-        Predicate<object> filter = o =>
-          {
-            AddonView av = (AddonView)o;
-            string txt = txtFilter.Text.ToLower();
-            bool ret = av.Title.ToLower().Contains(txt)
-              || av.SourceName.ToLower().Contains(txt)
-              || av.Tags.Any(q => q.ToLower().Contains(txt));
-            return ret;
-          };
-        listCollectionView.Filter = filter;
-      }
-      else
-        listCollectionView.Filter = null;
+      UpdateFilter();
     }
 
     private void btnDescription_Click(object sender, RoutedEventArgs e)
@@ -237,6 +210,43 @@ namespace CommunityManager.Windows
     private void txtFilter_KeyUp(object sender, KeyEventArgs e)
     {
       if (e.Key == Key.Escape) txtFilter.Text = "";
+    }
+
+    private void chkNew_Checked(object sender, RoutedEventArgs e)
+    {
+      UpdateFilter();
+    }
+
+    private void UpdateFilter()
+    {
+      Predicate<object> textFilter;
+      Predicate<object> isNewFilter;
+      if (txtFilter.Text.Trim().Length > 0)
+      {
+        textFilter = o =>
+        {
+          AddonView av = (AddonView)o;
+          string txt = txtFilter.Text.ToLower();
+          bool ret = av.Title.ToLower().Contains(txt)
+            || av.SourceName.ToLower().Contains(txt)
+            || av.Tags.Any(q => q.ToLower().Contains(txt));
+          return ret;
+        };
+      }
+      else
+        textFilter = o => true;
+
+      if (chkNew.IsChecked == true)
+        isNewFilter = o =>
+        {
+          AddonView av = (AddonView)o;
+          return av.IsNew;
+        };
+      else
+        isNewFilter = o => true;
+
+      Predicate<object> andFilter = o => textFilter(o) && isNewFilter(o);
+      listCollectionView.Filter = andFilter;
     }
   }
 }
