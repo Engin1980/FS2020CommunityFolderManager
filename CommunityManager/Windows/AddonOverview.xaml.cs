@@ -94,6 +94,7 @@ namespace CommunityManager.Windows
       var addonInfos = lstAddonViews.SelectedItems.Cast<AddonView>().ToList();
       if (addonInfos.Count > 1)
         if (Message.ShowDialog(
+          this,
           "Adjust multiple items?",
           $"There are {addonInfos.Count} items selected. Adjust tags to all of them?",
           Types.DialogResult.Yes, Types.DialogResult.Cancel) == Types.DialogResult.Cancel) return;
@@ -162,14 +163,14 @@ namespace CommunityManager.Windows
       var addonViews = this.lstAddonViews.SelectedItems.Cast<AddonView>().ToList();
       if (addonViews.Count == 0)
       {
-        Message.ShowDialog("Select at least one addon", 
+        Message.ShowDialog(this, "Select at least one addon", 
           "At least one addon item must be selected.", Types.DialogResult.Ok);
         return;
       }
       else if ((addonViews.Count > 1 && addonViews.Any(q => q is GroupAddonView))
         || (addonViews.Count == 1 && addonViews.First() is not GroupAddonView))
       {
-        Message.ShowDialog("Correct selected addons",
+        Message.ShowDialog(this, "Correct selected addons",
           "There must be exactly one grouped addon selected, or one or more non-group addons selected.",
           Types.DialogResult.Ok);
           return;
@@ -180,7 +181,7 @@ namespace CommunityManager.Windows
       {
         var tmp = addonViews.Cast<SingleAddonView>();
         string title = addonViews.First().Title;
-        if (addonViews.Count > 1) title += " + " + addonViews.Count.ToString();
+        if (addonViews.Count > 1) title += " + " + (addonViews.Count - 1).ToString();
         gav = new(tmp, title);
         int index = this.Project.Addons.IndexOf(tmp.First());
         tmp.ForEach(q => this.Project.Addons.Remove(q));

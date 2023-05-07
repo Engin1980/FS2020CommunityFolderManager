@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.CompilerServices;
 using System.Windows.Markup;
 using Newtonsoft.Json.Linq;
 
@@ -18,6 +20,8 @@ namespace CommunityManagerLib.Addons
 
     public string? Type { get; private set; }
 
+    public DateTime CreationDateTime { get; private set; }
+
     private AddonManifestData() { }
 
     public static AddonManifestData Create(AddonSource addonSource)
@@ -26,6 +30,10 @@ namespace CommunityManagerLib.Addons
       try
       {
         string fileContent = System.IO.File.ReadAllText(addonSource.ManifestFilePath);
+
+        var manifestFileInfo = new FileInfo(addonSource.ManifestFilePath);
+        DateTime dateTime = manifestFileInfo.CreationTime;
+
         JObject json = JObject.Parse(fileContent);
         string title = (string)json["title"]!;
         string? contentType = (string?)json["content_type"];
@@ -50,7 +58,8 @@ namespace CommunityManagerLib.Addons
           ManifestTitle = title,
           Manufacturer = manufacturer,
           Type = contentType,
-          Dependencies = dependencies
+          Dependencies = dependencies,
+          CreationDateTime = dateTime
         };
       }
       catch (Exception ex)

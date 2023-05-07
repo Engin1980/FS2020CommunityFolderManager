@@ -1,4 +1,5 @@
 ﻿using CommunityManagerLib;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
@@ -10,6 +11,8 @@ namespace CommunityManagerLib.Addons
   {
     public abstract string Author { get; }
     public abstract string SourceName { get; }
+
+    public abstract DateTime CreationDateTime { get; }
     public abstract List<string> Tags { get; set; }
     public abstract string Title { get; set; }
     public abstract bool IsActive { get; }

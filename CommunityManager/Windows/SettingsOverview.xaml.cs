@@ -71,7 +71,8 @@ namespace CommunityManager.Windows
     {
       if (isSettingsUpdated)
       {
-        if (Message.ShowDialog("Reload addons?",
+        if (Message.ShowDialog(this, 
+          "Reload addons?",
           "Community folder path seems to be updated. Reload addons?",
           Types.DialogResult.Yes, Types.DialogResult.No) == Types.DialogResult.Yes)
         {

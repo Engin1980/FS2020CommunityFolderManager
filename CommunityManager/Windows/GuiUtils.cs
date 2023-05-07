@@ -2,8 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace CommunityManager.Windows
 {
@@ -19,6 +21,7 @@ namespace CommunityManager.Windows
     {
       if (askForSure)
         if (Message.ShowDialog(
+           CurrentWindow,
            "Load",
            "You will loose all unsaved changes. Are you sure you would like to reload the data?",
            Types.DialogResult.Yes, Types.DialogResult.Cancel) == Types.DialogResult.Cancel) return;
@@ -27,15 +30,15 @@ namespace CommunityManager.Windows
       {
         project.ReloadAddons(out List<string> issues);
         if (issues.Count == 0 && showSuccessConfirmation)
-          Message.ShowDialog("Reloaded.", "Changes have been reloaded.", Types.DialogResult.Ok);
+          Message.ShowDialog(CurrentWindow, "Reloaded.", "Changes have been reloaded.", Types.DialogResult.Ok);
         else if (issues.Count > 0)
-          Message.ShowDialog("Reloaded with issues",
+          Message.ShowDialog(CurrentWindow, "Reloaded with issues",
             "Changes have been reloaded. However, there were some issues:\n" + string.Join("\n\t", issues),
             Types.DialogResult.Ok);
       }
       catch (Exception ex)
       {
-        Message.ShowDialog("Reload failed.", "Changes have not been reloaded. Reason: " + ex.ToMessageString(),
+        Message.ShowDialog(CurrentWindow, "Reload failed.", "Changes have not been reloaded. Reason: " + ex.ToMessageString(),
           Types.DialogResult.Ok);
       }
     }
@@ -44,6 +47,7 @@ namespace CommunityManager.Windows
     {
       if (askForSure)
         if (Message.ShowDialog(
+          CurrentWindow,
             "Load",
             "You will loose all unsaved changes. Are you sure you would like to reload the data?",
             Types.DialogResult.Yes, Types.DialogResult.Cancel) == Types.DialogResult.Cancel) return;
@@ -52,11 +56,11 @@ namespace CommunityManager.Windows
       {
         project.ReloadPrograms();
         if (showSuccessConfirmation)
-          Message.ShowDialog("Reloaded.", "Changes have been reloaded.", Types.DialogResult.Ok);
+          Message.ShowDialog(CurrentWindow, "Reloaded.", "Changes have been reloaded.", Types.DialogResult.Ok);
       }
       catch (Exception ex)
       {
-        Message.ShowDialog("Reload failed.", "Changes have not been reloaded. Reason: " + ex.ToMessageString(),
+        Message.ShowDialog(CurrentWindow, "Reload failed.", "Changes have not been reloaded. Reason: " + ex.ToMessageString(),
           Types.DialogResult.Ok);
       }
     }
@@ -64,18 +68,18 @@ namespace CommunityManager.Windows
     internal static void ReloadSettings(Project project, bool askForSure, bool showSuccessConfirmation)
     {
       if (askForSure)
-        if (Message.ShowDialog("Load",
+        if (Message.ShowDialog(CurrentWindow, "Load",
           "You will loose all unsaved changes. Are you sure you would like to reload the data?",
           Types.DialogResult.Yes, Types.DialogResult.Cancel) == Types.DialogResult.Cancel) return;
       try
       {
         project.ReloadSettings();
         if (showSuccessConfirmation)
-          Message.ShowDialog("Reloaded.", "Changes have been reloaded.", Types.DialogResult.Ok);
+          Message.ShowDialog(CurrentWindow, "Load", "Changes have been reloaded.", Types.DialogResult.Ok);
       }
       catch (Exception ex)
       {
-        Message.ShowDialog("Failed to load settings.",
+        Message.ShowDialog(CurrentWindow, "Failed to load settings.",
           "Settings was not loaded: " + ex.ToMessageString() + "\n\n" +
           "Settings are empty. Reset the FS2020 Configuration file. Addons WILL NOT be loaded too.",
           Types.DialogResult.Ok);
@@ -86,6 +90,7 @@ namespace CommunityManager.Windows
     {
       if (askForSure)
         if (Message.ShowDialog(
+          CurrentWindow,
           "Load",
           "You will loose all unsaved changes. Are you sure you would like to reload the data?",
           Types.DialogResult.Yes, Types.DialogResult.Cancel) == Types.DialogResult.Cancel) return;
@@ -94,11 +99,11 @@ namespace CommunityManager.Windows
       {
         project.ReloadStartupConfigurations();
         if (showSuccessConfirmation)
-          Message.ShowDialog("Reloaded.", "Changes have been reloaded.", Types.DialogResult.Ok);
+          Message.ShowDialog(CurrentWindow, "Load", "Changes have been reloaded.", Types.DialogResult.Ok);
       }
       catch (Exception ex)
       {
-        Message.ShowDialog("Reload failed.", "Changes have not been reloaded. Reason: " + ex.ToMessageString(),
+        Message.ShowDialog(CurrentWindow, "Reload failed.", "Changes have not been reloaded. Reason: " + ex.ToMessageString(),
           Types.DialogResult.Ok);
       }
     }
@@ -109,16 +114,18 @@ namespace CommunityManager.Windows
       {
         project.SaveAddons();
         if (showSuccessConfirmation)
-          Message.ShowDialog("Saved.", "Changes have been saved.", Types.DialogResult.Ok);
+          Message.ShowDialog(CurrentWindow, "Saved.", "Changes have been saved.", Types.DialogResult.Ok);
         return Result.Success;
       }
       catch (Exception ex)
       {
-        Message.ShowDialog("Save failed.", "Changes have not been saved. Reason: " + ex.ToMessageString(),
+        Message.ShowDialog(CurrentWindow, "Save failed.", "Changes have not been saved. Reason: " + ex.ToMessageString(),
           Types.DialogResult.Ok);
         return Result.Error;
       }
     }
+
+    private static Window? CurrentWindow => Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive);
 
     internal static Result SavePrograms(Project project, bool showSuccessConfirmation)
     {
@@ -126,14 +133,14 @@ namespace CommunityManager.Windows
       {
         project.SavePrograms();
         if (showSuccessConfirmation)
-          Message.ShowDialog("Saved.", "Changes have been saved.", Types.DialogResult.Ok);
+          Message.ShowDialog(CurrentWindow, "Saved.", "Changes have been saved.", Types.DialogResult.Ok);
         return Result.Success;
       }
       catch (Exception ex)
       {
-        Message.ShowDialog("Save failed.", "Changes have not been saved. Reason: " + ex.ToMessageString(),
+        Message.ShowDialog(CurrentWindow, "Save failed.", "Changes have not been saved. Reason: " + ex.ToMessageString(),
           Types.DialogResult.Ok);
-        return Result.Error; 
+        return Result.Error;
       }
     }
 
@@ -143,12 +150,12 @@ namespace CommunityManager.Windows
       {
         project.SaveSettings();
         if (showSuccessConfirmation)
-          Message.ShowDialog("Saved.", "Changes have been saved.", Types.DialogResult.Ok);
+          Message.ShowDialog(CurrentWindow, "Saved.", "Changes have been saved.", Types.DialogResult.Ok);
         return Result.Success;
       }
       catch (Exception ex)
       {
-        Message.ShowDialog("Save failed.", "Changes have not been saved. Reason: " + ex.ToMessageString(),
+        Message.ShowDialog(CurrentWindow, "Save failed.", "Changes have not been saved. Reason: " + ex.ToMessageString(),
           Types.DialogResult.Ok);
         return Result.Error;
       }
@@ -160,12 +167,12 @@ namespace CommunityManager.Windows
       {
         project.SaveStartupConfigurations();
         if (showSuccessConfirmation)
-          Message.ShowDialog("Saved.", "Changes have been saved.", Types.DialogResult.Ok);
+          Message.ShowDialog(CurrentWindow, "Saved.", "Changes have been saved.", Types.DialogResult.Ok);
         return Result.Success;
       }
       catch (Exception ex)
       {
-        Message.ShowDialog("Save failed.", "Changes have not been saved. Reason: " + ex.ToMessageString(),
+        Message.ShowDialog(CurrentWindow, "Save failed.", "Changes have not been saved. Reason: " + ex.ToMessageString(),
           Types.DialogResult.Ok);
         return Result.Error;
       }

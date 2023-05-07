@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -25,7 +26,10 @@ namespace CommunityManagerLib.Addons
     public override string Title
     {
       get => this.Addons.First().Addon.State.GroupGuid!;
-      set => this.Addons.ForEach(q => q.Addon.State.GroupGuid = value);
+      set { 
+        this.Addons.ForEach(q => q.Addon.State.GroupGuid = value); 
+        this.UpdateProperty(nameof(this.Title), value);
+      }
     }
 
     public GroupAddonView(IEnumerable<SingleAddonView> addons, string key)
@@ -39,5 +43,8 @@ namespace CommunityManagerLib.Addons
     public override bool IsActive => this.Addons.Any(q => q.IsActive);
     public override bool IsNew => this.Addons.Any(q => q.IsNew);
     public override bool IsGrouped => true;
+
+    public override DateTime CreationDateTime => this.Addons
+      .Min(q => q.Addon.Manifest.CreationDateTime);
   }
 }

@@ -43,12 +43,16 @@
                 IsEnabled="{Binding SelectedItem, ElementName=lstAddonViews, Converter={StaticResource ObjectNotNullToBoolConverter}}" />
 
         <TextBox x:Name="txtFilter" DockPanel.Dock="Left" Width="120" Height="34" Margin="4 0 4 0" Padding="8" TextChanged="txtFilter_TextChanged" KeyUp="txtFilter_KeyUp" />
-        <CheckBox x:Name="chkNew" DockPanel.Dock="Left" Margin="4 16 0 0" 
+        <StackPanel>
+          <CheckBox x:Name="chkNew" DockPanel.Dock="Left" Margin="4 8 0 0" 
                   Checked="chkNew_Checked"
                   Unchecked="chkNew_Checked">
-          <TextBlock>New only</TextBlock>
-        </CheckBox>
-
+            <TextBlock>New only</TextBlock>
+          </CheckBox>
+          <CheckBox x:Name="chkExpanded" DockPanel.Dock="Left" Margin="4 4 0 0" >
+            <TextBlock>Expanded</TextBlock>
+          </CheckBox>
+        </StackPanel>
         <Button x:Name="btnClose" Content="Save &amp; Close" DockPanel.Dock="Right" 
                 Click="btnClose_Click"/>
         <Button x:Name="btnLoad" Content="Reload" DockPanel.Dock="Right" 
@@ -99,36 +103,72 @@
                   </Label.Content>
                 </Label>
               </DockPanel>
-              <StackPanel  DockPanel.Dock="Top" Orientation="Horizontal" Margin="16 4 4 4"
+              <StackPanel Visibility="{Binding 
+                  ElementName=chkExpanded, 
+                  Path=IsChecked,
+                  Converter={StaticResource BoolToVisibilityConverter}}">
+                <!-- if is expanded -->
+
+                <StackPanel  DockPanel.Dock="Top" Margin="16 4 4 4"
                            Visibility="{Binding IsGrouped, Converter={StaticResource BoolNegatedToVisibilityConverter}}">
-                <TextBlock Text=".\" />
-                <TextBlock Text="{Binding SourceName}" />
-              </StackPanel>
-              <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="16 4 4 4"
-                           Visibility="{Binding IsGrouped, Converter={StaticResource BoolToVisibilityConverter}}">
-                <ItemsControl ItemsSource="{Binding Converter={StaticResource GroupAddonViewToSingleAddonViewsConverter}}">
-                  <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                      <StackPanel Orientation="Horizontal">
-                        <TextBlock FontWeight="Bold" Text="{Binding Title}" MinWidth="150" />
-                        <TextBlock Text="{Binding SourceName}" Margin="16 0 0 0" />
-                      </StackPanel>
-                    </DataTemplate>
-                  </ItemsControl.ItemTemplate>
-                </ItemsControl>
-              </StackPanel>
-              <StackPanel  DockPanel.Dock="Top"
-                           Orientation="Horizontal" Margin="16 4 4 4" 
+                  <!-- is grouped -->
+                  <StackPanel Orientation="Horizontal" Margin="0 4 4 4" >
+                    <TextBlock Text=".\" />
+                    <TextBlock Text="{Binding SourceName}" />
+                  </StackPanel>
+                  <StackPanel  DockPanel.Dock="Top"
+                           Orientation="Horizontal" Margin="0 4 4 4" 
                            Visibility="{Binding Author, Converter={StaticResource NonemptyStringToVisibilityConverter}}" >
-                <TextBlock Text="by " />
-                <TextBlock Text="{Binding Author}" />
-              </StackPanel>
-              <controls:TagPanel DockPanel.Dock="Top"
-                                 Tag="{Binding Path=DataContext.SourceName, RelativeSource={RelativeSource AncestorType=StackPanel}}" 
-                                 DataContext="{Binding Tags}"
-                                 MouseDoubleClick="TagPanel_MouseDoubleClick" Margin="16 4 4 4"/>
-              <TextBlock Text="{Binding Note}" Margin="16 0 0 0" TextWrapping="Wrap"
+                    <TextBlock Text="{Binding CreationDateTime,StringFormat=yyyy-dd-MM HH:mm:ss}" />
+                  </StackPanel>
+                  <StackPanel  DockPanel.Dock="Top"
+                           Orientation="Horizontal" Margin="0 4 4 4" 
+                           Visibility="{Binding Author, Converter={StaticResource NonemptyStringToVisibilityConverter}}" >
+                    <TextBlock Text="by " />
+                    <TextBlock Text="{Binding Author}" />
+                  </StackPanel>
+                </StackPanel>
+
+                <StackPanel DockPanel.Dock="Top" Margin="16 4 4 4"
+                           Visibility="{Binding IsGrouped, Converter={StaticResource BoolToVisibilityConverter}}">
+                  <!-- if is not grouped -->
+                  <DataGrid
+                      HorizontalContentAlignment="Left"
+                      ItemsSource="{Binding Converter={StaticResource GroupAddonViewToSingleAddonViewsConverter}}"
+                      AutoGenerateColumns="False" HeadersVisibility="None"
+                      HorizontalAlignment="Left" Width="Auto" IsReadOnly="True"
+                      AlternatingRowBackground="GhostWhite"
+                    >
+                    <DataGrid.Columns>
+                      <DataGridTextColumn Binding="{Binding Title, Mode=OneWay}" Width="Auto" />
+                      <DataGridTextColumn Binding="{Binding SourceName, Mode=OneWay}" Width="Auto" />
+                      <DataGridTextColumn 
+                          Binding="{Binding CreationDateTime, Mode=OneWay, StringFormat=yyyy-dd-MM HH:mm:ss}"
+                          Width="Auto"/>
+                      <DataGridTemplateColumn Width="Auto">
+                        <DataGridTemplateColumn.CellTemplate>
+                          <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                              <TextBlock Text="by "/>
+                              <TextBlock Text="{Binding Author, Mode=OneWay}" />
+                            </StackPanel>
+                          </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                      </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                  </DataGrid>
+
+                  <TextBlock Text="{Binding Note}" Margin="16 0 0 0" TextWrapping="Wrap"
                          Visibility="{Binding Converter={StaticResource NoteVisibilityConverter}}" />
+                </StackPanel>
+
+              </StackPanel>
+
+              <controls:TagPanel DockPanel.Dock="Top"
+                  Tag="{Binding Path=DataContext.SourceName, RelativeSource={RelativeSource AncestorType=StackPanel}}" 
+                  DataContext="{Binding Tags}"
+                  MouseDoubleClick="TagPanel_MouseDoubleClick" Margin="16 4 4 4"/>
+
             </StackPanel>
           </DataTemplate>
         </ListView.ItemTemplate>

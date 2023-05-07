@@ -78,10 +78,6 @@ namespace CommunityManager.Windows
         .Cast<GroupAddonView>()
         .OrderBy(q => q.Title)
         .ToBindingList();
-      //var others = addons.Where(q => q is SingleAddonView)
-      //  .Cast<SingleAddonView>()
-      //  .OrderBy(q => q.Title)
-      //  .ToBindingList();
 
       this.Context = new GroupContext()
       {
@@ -98,17 +94,18 @@ namespace CommunityManager.Windows
     private void btnMoveRight_Click(object sender, RoutedEventArgs e)
     {
       var selected = lstAll.SelectedItems.Cast<SingleAddonView>().ToList();
-      selected.ForEach(q => Context.AddonsLcv.Remove(q));
+      selected.ForEach(q => this.addons.Remove(q));
+      Context.AddonsLcv.Refresh();
       selected.ForEach(q => Context.SelectedGroupAddonsLcv.AddNewItem(q));
       Context.SelectedGroupAddonsLcv.CommitNew();
     }
 
     private void btnMoveLeft_Click(object sender, RoutedEventArgs e)
     {
-      var selected = lstGroup.SelectedItems.Cast<SingleAddonView>().ToList(); //.Cast<SingleAddonView>().ToList();
+      var selected = lstGroup.SelectedItems.Cast<SingleAddonView>().ToList();
       selected.ForEach(q => Context.SelectedGroupAddonsLcv.Remove(q));
-      selected.ForEach(q => Context.AddonsLcv.AddNewItem(q));
-      Context.AddonsLcv.CommitNew();
+      selected.ForEach(q=>this.addons.Add(q));
+      Context.AddonsLcv.Refresh();
     }
 
     private void txtAllFilter_TextChanged(object sender, TextChangedEventArgs e)
@@ -132,7 +129,8 @@ namespace CommunityManager.Windows
     private void btnAdd_Click(object sender, RoutedEventArgs e)
     {
       var selected = lstAll.SelectedItems.Cast<SingleAddonView>().ToList();
-      selected.ForEach(q => Context.AddonsLcv.Remove(q));
+      selected.ForEach(q => this.addons.Remove(q));
+      Context.AddonsLcv.Refresh();
 
       GroupAddonView groupAddonView = new(selected, "<new_group>");
       this.Context.Groups.Add(groupAddonView);
@@ -143,6 +141,7 @@ namespace CommunityManager.Windows
     {
       if (Context.SelectedGroup is null) return;
       if (Message.ShowDialog(
+        this,
         "Dissolve group?",
         "The selected group will be dissolved. Are you sure?",
         Types.DialogResult.Yes, Types.DialogResult.No) == Types.DialogResult.No)
@@ -151,8 +150,9 @@ namespace CommunityManager.Windows
       GroupAddonView gav = Context.SelectedGroup;
       Context.SelectedGroup = null;
       Context.Groups.Remove(gav);
-      Context.AddonsLcv.Remove(gav);
-      gav.Addons.ForEach(q => Context.AddonsLcv.AddNewItem(q));
+      this.addons.Remove(gav);
+      Context.AddonsLcv.Refresh();
+      gav.Addons.ForEach(q => this.addons.Add(q));
       Context.AddonsLcv.CommitNew();
     }
   }

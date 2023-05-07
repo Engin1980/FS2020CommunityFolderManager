@@ -107,6 +107,7 @@ namespace CommunityManager
       if (!Project.AnyDataFileExists())
       {
         Message.ShowDialog(
+          this,
           "No data exists.",
           "There are no saved config data. Probably new app instalation? A new empty project will be created.\n\n" +
           "Remember to set FS2020 Community folder location in settings.",

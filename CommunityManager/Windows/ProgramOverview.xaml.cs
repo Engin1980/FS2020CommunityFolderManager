@@ -153,8 +153,7 @@ namespace CommunityManager.Windows
     private void txtStartupDelay_TextChanged(object sender, TextChangedEventArgs e)
     {
       TextBox txt = (TextBox)sender;
-      bool fail = false;
-      fail = int.TryParse(txt.Text, out int val) == false;
+      bool fail = int.TryParse(txt.Text, out int val) == false;
       fail |= val < 0;
       txt.Background = new SolidColorBrush(
         fail ? Colors.Red : SystemColors.WindowColor);
@@ -163,6 +162,7 @@ namespace CommunityManager.Windows
     private void btnDelete_Click(object sender, RoutedEventArgs e)
     {
       if (Message.ShowDialog(
+        this,
         "Delete confirmation",
         "Really delete all selected programs?",
         Types.DialogResult.Yes, Types.DialogResult.No) == Types.DialogResult.No) return;

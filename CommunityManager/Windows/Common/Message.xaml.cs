@@ -25,7 +25,13 @@ namespace CommunityManager.Windows
     public class Data : NotifyPropertyChangedBase
     {
       public Data(string title, string prompt, params DialogResult[] dialogResults)
+        : this(null, title, prompt, dialogResults)
       {
+      }
+
+      public Data(Window? owner, string title, string prompt, params DialogResult[] dialogResults)
+      {
+        Owner = owner;
         Title = title;
         Prompt = prompt;
         AvailableDialogResults = dialogResults;
@@ -49,6 +55,7 @@ namespace CommunityManager.Windows
         set => base.UpdateProperty(nameof(WindowWidth), value);
       }
       public Types.DialogResult DialogResult { get; set; } = Types.DialogResult.Cancel;
+      public Window? Owner { get; set; }
     }
 
     public Message()
@@ -59,6 +66,16 @@ namespace CommunityManager.Windows
     public Message(Data data) : this()
     {
       this.DataContext = data ?? throw new ArgumentNullException(nameof(data));
+      this.Owner = data?.Owner;
+      if (this.Owner != null)
+      {
+        double w = (this.Owner.Width - data!.WindowWidth) / 2;
+        this.Left = Math.Max(0, this.Owner.Left + w);
+        double t = (this.Owner.Height - data!.WindowHeight) / 2;
+        this.Top = Math.Max(0, t);
+      }
+      this.Width = data!.WindowWidth;
+      this.Height = data!.WindowHeight;
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -70,9 +87,9 @@ namespace CommunityManager.Windows
       this.Hide();
     }
 
-    public static DialogResult ShowDialog(string title, string prompt, params DialogResult[] availableResults)
+    public static DialogResult ShowDialog(Window? owner, string title, string prompt, params DialogResult[] availableResults)
     {
-      Data data = new(title, prompt, availableResults);
+      Data data = new(owner, title, prompt, availableResults);
       new Message(data)
       {
         Owner = Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive)
@@ -83,12 +100,6 @@ namespace CommunityManager.Windows
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
       itmButtons.Focus();
-    }
-
-    private void Window_Initialized(object sender, EventArgs e)
-    {
-      this.GetBindingExpression(Window.WidthProperty).UpdateTarget();
-      this.GetBindingExpression(Window.HeightProperty).UpdateTarget();
     }
   }
 }

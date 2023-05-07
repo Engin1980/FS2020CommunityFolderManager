@@ -98,6 +98,7 @@ namespace CommunityManager.Windows
     private void btnDelete_Click(object sender, RoutedEventArgs e)
     {
       if (Message.ShowDialog(
+        this,
         "Delete confirmation",
         "Really delete all selected startup configurations?",
         Types.DialogResult.Yes, Types.DialogResult.No) == Types.DialogResult.No) return;

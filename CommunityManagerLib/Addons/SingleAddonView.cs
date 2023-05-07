@@ -49,5 +49,7 @@ namespace CommunityManagerLib.Addons
         base.InvokePropertyChanged(nameof(Note));
       }
     }
+
+    public override DateTime CreationDateTime => this.Addon.Manifest.CreationDateTime;
   }
 }

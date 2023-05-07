@@ -5,10 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CommunityManager.Windows"
         mc:Ignorable="d"
-        Title="{Binding Title}"
-        Height="{Binding WindowHeight,Mode=TwoWay,FallbackValue=1250}" 
-        Width="{Binding WindowWidth,Mode=TwoWay,FallbackValue=1400}" Loaded="Window_Loaded"
-        ShowInTaskbar="False" Initialized="Window_Initialized">
+        Title="{Binding Title}" Loaded="Window_Loaded"
+        ShowInTaskbar="False">
   <DockPanel>
     <DockPanel DockPanel.Dock="Bottom" LastChildFill="False">
       <ItemsControl ItemsSource="{Binding AvailableDialogResults}" x:Name="itmButtons">
