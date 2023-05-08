@@ -171,9 +171,15 @@ namespace CommunityManager.Windows
       if (lstStartupConfigurations.SelectedIndex < 0) return;
       StartupConfiguration sc = (StartupConfiguration)lstStartupConfigurations.SelectedItem;
       UpdateTags(new List<StartupConfiguration>() { sc });
+      UpdateAnalysisBindings();
     }
 
     private void btnAnalyse_Click(object sender, RoutedEventArgs e)
+    {
+      UpdateAnalysisBindings();
+    }
+
+    private void UpdateAnalysisBindings()
     {
       StartupConfiguration sc = (StartupConfiguration)lstStartupConfigurations.SelectedItem;
       RunExecutor re = new();
@@ -186,9 +192,16 @@ namespace CommunityManager.Windows
       var includedPrograms = programs.Where(q => q.Value).Select(q => q.Key).ToList();
       var excludedPrograms = programs.Where(q => !q.Value).Select(q => q.Key).ToList();
 
-      new StartupConfigurationAnalysis(
-        includedAddons, excludedAddons, includedPrograms, excludedPrograms)
-        .ShowDialog();
+      this.lstIncludedAddons.ItemsSource = includedAddons;
+      this.lstExcludedAddons.ItemsSource = excludedAddons;
+      this.lstIncludedPrograms.ItemsSource = includedPrograms;
+      this.lstExcludedPrograms.ItemsSource = excludedPrograms;
+    }
+
+    private void lstStartupConfigurations_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+      if (lstStartupConfigurations.SelectedItem is not null)
+        UpdateAnalysisBindings();
     }
   }
 }

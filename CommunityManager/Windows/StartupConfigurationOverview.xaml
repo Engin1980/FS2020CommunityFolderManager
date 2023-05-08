@@ -22,9 +22,6 @@
       <Button x:Name="btnTags" DockPanel.Dock="Left"
               Content="Tags" Click="btnTags_Click"
               IsEnabled="{Binding SelectedItem, ElementName=lstStartupConfigurations, Converter={StaticResource ObjectNotNullToBoolConverter}}" />
-      <Button x:Name="btnAnalyse" DockPanel.Dock="Left"
-              Content="Analyse" Click="btnAnalyse_Click"
-              IsEnabled="{Binding SelectedItem, ElementName=lstStartupConfigurations, Converter={StaticResource ObjectNotNullToBoolConverter}}" />      
       <Button x:Name="btnDelete"  DockPanel.Dock="Left"
               Content="Delete" Click="btnDelete_Click" 
               IsEnabled="{Binding SelectedItem, ElementName=lstStartupConfigurations, Converter={StaticResource ObjectNotNullToBoolConverter}}" />
@@ -39,25 +36,125 @@
       <Button x:Name="btnLoad" Content="Reload" DockPanel.Dock="Right" 
               Click="btnLoad_Click"/>
     </DockPanel>
-    <ListView x:Name="lstStartupConfigurations" ItemsSource="{Binding}">
-      <ListView.Template>
-        <ControlTemplate>
-          <ScrollViewer>
-            <ItemsPresenter></ItemsPresenter>
-          </ScrollViewer>
-        </ControlTemplate>
-      </ListView.Template>
-      <ListView.ItemTemplate>
-        <DataTemplate>
-          <StackPanel>
-            <Label x:Name="lblName" Content="{Binding Title}" Tag="{Binding Title}" FontWeight="Bold" MouseDoubleClick="lblName_MouseDoubleClick" />
-            <controls:TagPanel 
+    <Grid>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="5" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
+
+      <ListView x:Name="lstStartupConfigurations" ItemsSource="{Binding}" Grid.Row="0" Grid.Column="0" SelectionChanged="lstStartupConfigurations_SelectionChanged" >
+        <ListView.Template>
+          <ControlTemplate>
+            <ScrollViewer>
+              <ItemsPresenter></ItemsPresenter>
+            </ScrollViewer>
+          </ControlTemplate>
+        </ListView.Template>
+        <ListView.ItemTemplate>
+          <DataTemplate>
+            <StackPanel>
+              <Label x:Name="lblName" Content="{Binding Title}" Tag="{Binding Title}" FontWeight="Bold" MouseDoubleClick="lblName_MouseDoubleClick" />
+              <controls:TagPanel 
               Tag="{Binding Path=DataContext.Title, RelativeSource={RelativeSource AncestorType=StackPanel}}" 
               DataContext="{Binding Tags}"
               Margin="32 4 4 4" MouseDoubleClick="TagPanel_MouseDoubleClick"/>
-          </StackPanel>
-        </DataTemplate>
-      </ListView.ItemTemplate>
-    </ListView>
+            </StackPanel>
+          </DataTemplate>
+        </ListView.ItemTemplate>
+      </ListView>
+      <GridSplitter Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" />
+      <TabControl Grid.Row="0" Grid.Column="2" >
+        <TabItem Header="Addons">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto" />
+              <RowDefinition Height="*" />
+              <RowDefinition Height="5" />
+              <RowDefinition Height="Auto" />
+              <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0">Included:</Label>
+            <ScrollViewer Grid.Row="1" Grid.Column="0">
+              <ItemsControl x:Name="lstIncludedAddons">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <StackPanel>
+                      <Label Content="{Binding Title}" />
+                      <controls:TagPanel DataContext="{Binding Tags}" />
+                    </StackPanel>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </ScrollViewer>
+            <GridSplitter Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+            <Label Grid.Row="3" Grid.Column="0">Excluded:</Label>
+            <ScrollViewer Grid.Row="4" Grid.Column="0" >
+              <ItemsControl x:Name="lstExcludedAddons" >
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <StackPanel>
+                      <Label Content="{Binding Title}" />
+                      <controls:TagPanel DataContext="{Binding Tags}" />
+                    </StackPanel>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </ScrollViewer>
+          </Grid>
+        </TabItem>
+        <TabItem Header="Programs">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto" />
+              <RowDefinition Height="*" />
+              <RowDefinition Height="5" />
+              <RowDefinition Height="Auto" />
+              <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0">Included:</Label>
+            <ScrollViewer Grid.Row="1" Grid.Column="0">
+              <ItemsControl x:Name="lstIncludedPrograms">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <StackPanel>
+                      <Label Content="{Binding Title}" />
+                      <controls:TagPanel DataContext="{Binding Tags}" />
+                    </StackPanel>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </ScrollViewer>
+            <GridSplitter Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+            <Label Grid.Row="3" Grid.Column="0">Excluded:</Label>
+            <ScrollViewer Grid.Row="4" Grid.Column="0" >
+              <ItemsControl x:Name="lstExcludedPrograms" >
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <StackPanel>
+                      <Label Content="{Binding DisplayTitle}" />
+                      <controls:TagPanel DataContext="{Binding Tags}" />
+                    </StackPanel>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </ScrollViewer>
+          </Grid>
+        </TabItem>
+      </TabControl>
+
+    </Grid>
+
   </DockPanel>
 </Window>

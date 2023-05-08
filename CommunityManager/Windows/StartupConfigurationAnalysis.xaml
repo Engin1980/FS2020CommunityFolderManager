@@ -89,7 +89,7 @@
           <DataTemplate>
             <StackPanel>
               <Label Content="{Binding DisplayTitle}" />
-              <controls:TagPanel DataContext="{Binding State.Tags}" />
+              <controls:TagPanel DataContext="{Binding Tags}" />
             </StackPanel>
           </DataTemplate>
         </ListView.ItemTemplate>
