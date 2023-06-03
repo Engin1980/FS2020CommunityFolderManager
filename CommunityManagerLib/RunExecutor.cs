@@ -53,7 +53,9 @@ namespace CommunityManagerLib
 
     private bool IsTagMatch(List<string> requiredTags, List<string> availableTags)
     {
-      bool ret = requiredTags.Intersect(availableTags).Count() > 0;
+      bool ret = availableTags.All(q => string.Compare(q, "off", true) != 0) 
+        && (availableTags.Any(q => string.Compare(q, "on", true) == 0)
+        || requiredTags.Intersect(availableTags).Any());
       return ret;
     }
   }
