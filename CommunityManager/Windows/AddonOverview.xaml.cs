@@ -1,6 +1,7 @@
 ﻿using CommunityManager.Controls;
 using CommunityManagerLib;
 using CommunityManagerLib.Addons;
+using CommunityManagerLib.Settings;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -163,7 +164,7 @@ namespace CommunityManager.Windows
       var addonViews = this.lstAddonViews.SelectedItems.Cast<AddonView>().ToList();
       if (addonViews.Count == 0)
       {
-        Message.ShowDialog(this, "Select at least one addon", 
+        Message.ShowDialog(this, "Select at least one addon",
           "At least one addon item must be selected.", Types.DialogResult.Ok);
         return;
       }
@@ -173,7 +174,7 @@ namespace CommunityManager.Windows
         Message.ShowDialog(this, "Correct selected addons",
           "There must be exactly one grouped addon selected, or one or more non-group addons selected.",
           Types.DialogResult.Ok);
-          return;
+        return;
       }
 
       GroupAddonView gav;
@@ -186,8 +187,9 @@ namespace CommunityManager.Windows
         int index = this.Project.Addons.IndexOf(tmp.First());
         tmp.ForEach(q => this.Project.Addons.Remove(q));
         this.Project.Addons.Insert(index, gav);
-      } else
-        gav = (GroupAddonView) addonViews.First();
+      }
+      else
+        gav = (GroupAddonView)addonViews.First();
 
 
       GroupManager frm = new GroupManager(this.Project.Addons, gav);
@@ -248,6 +250,21 @@ namespace CommunityManager.Windows
 
       Predicate<object> andFilter = o => textFilter(o) && isNewFilter(o);
       listCollectionView.Filter = andFilter;
+    }
+
+    private void txtSourceName_MouseDown(object sender, MouseEventArgs e)
+    {
+      TextBlock txt = (TextBlock)sender;
+      SingleAddonView sav = (SingleAddonView)txt.DataContext;
+      string sourceName = sav.SourceName;
+      string folderPath;
+      if (sav.IsActive)
+        folderPath = Project.Settings.CommunityFolderPath;
+      else
+        folderPath = System.IO.Path.Join(Project.Settings.CommunityFolderPath, Settings.INACTIVE_ADDONS_SUBFOLDER);
+      folderPath = System.IO.Path.Combine(folderPath, sav.SourceName);
+
+      Process.Start("explorer.exe", $"/select,\"{folderPath}\"");
     }
   }
 }

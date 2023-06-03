@@ -114,7 +114,10 @@
                   <!-- is grouped -->
                   <StackPanel Orientation="Horizontal" Margin="0 4 4 4" >
                     <TextBlock Text=".\" />
-                    <TextBlock Text="{Binding SourceName}" />
+                    <TextBlock Text="{Binding SourceName}" 
+                               Foreground="Blue" Cursor="Hand" TextDecorations="Underline"
+                               MouseDown="txtSourceName_MouseDown"
+                               />
                   </StackPanel>
                   <StackPanel  DockPanel.Dock="Top"
                            Orientation="Horizontal" Margin="0 4 4 4" 
