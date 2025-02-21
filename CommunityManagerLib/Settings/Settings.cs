@@ -35,5 +35,11 @@ namespace CommunityManagerLib.Settings
       get => base.GetProperty<int>(nameof(AutoCloseDelayInSeconds))!;
       set => base.UpdateProperty(nameof(AutoCloseDelayInSeconds), value);
     }
+
+    public bool OnlyFavouriteTags
+    {
+      get { return base.GetProperty<bool>(nameof(OnlyFavouriteTags))!; }
+      set { base.UpdateProperty(nameof(OnlyFavouriteTags), value); }
+    }
   }
 }

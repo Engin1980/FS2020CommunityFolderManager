@@ -226,7 +226,7 @@ namespace CommunityManagerLib
       }
     }
 
-    public BindingList<string> ReloadFavouriteRunTags()
+    public BindingList<string> LoadFavouriteRunTags()
     {
       List<string> ret;
       try
@@ -239,6 +239,11 @@ namespace CommunityManagerLib
       }
 
       return ret.ToBindingList();
+    }
+
+    public void ReloadFavouriteRunTags()
+    {
+      this.FavouriteRunTags = LoadFavouriteRunTags();
     }
 
     #endregion
@@ -277,6 +282,7 @@ namespace CommunityManagerLib
         CommunityFolderPath = ""
       };
       this.StartupConfigurations = new();
+      this.FavouriteRunTags = new();
     }
 
     public List<string> GetAllTags()

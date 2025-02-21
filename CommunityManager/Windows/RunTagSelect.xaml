@@ -12,8 +12,9 @@
   </Window.Resources>
   <DockPanel>
     <DockPanel DockPanel.Dock="Top">
-      <CheckBox x:Name="chkOnlyFavourites" DockPanel.Dock="Right" Margin="8">Only Favourite Tags</CheckBox>
-      <Label /> <!-- empty content to force checkbox to be on the right -->
+      <CheckBox x:Name="chkOnlyFavourites" Click="chkOnlyFavourites_Click" DockPanel.Dock="Right" Margin="8">Only Favourite Tags</CheckBox>
+      <Label />
+      <!-- Label with empty content to force checkbox to be on the right -->
     </DockPanel>
     <DockPanel DockPanel.Dock="Bottom">
       <Button x:Name="btnRun" Click="btnRun_Click" >Run</Button>
@@ -34,7 +35,7 @@
       <ListBox x:Name="lstInactive" Grid.Row="1" Grid.Column="0" ItemsSource="{Binding DisabledTags}" HorizontalContentAlignment="Stretch">
         <ListBox.ItemTemplate>
           <DataTemplate>
-            <Label Content="{Binding}" Background="{Binding Converter={StaticResource TagToBackgroundConverter}}"
+            <Label Visibility="{Binding Visibility}" Content="{Binding Label}" Background="{Binding Label, Converter={StaticResource TagToBackgroundConverter}}"
                    MouseDown="Label_MouseDown" Tag="{Binding}" />
           </DataTemplate>
         </ListBox.ItemTemplate>
@@ -42,7 +43,7 @@
       <ListBox x:Name="lstActive" Grid.Row="1" Grid.Column="2" ItemsSource="{Binding EnabledTags}" HorizontalContentAlignment="Stretch">
         <ListBox.ItemTemplate>
           <DataTemplate>
-            <Label Content="{Binding}" Background="{Binding Converter={StaticResource TagToBackgroundConverter}}" 
+            <Label Visibility="{Binding Visibility}" Content="{Binding Label}" Background="{Binding Label, Converter={StaticResource TagToBackgroundConverter}}" 
                    MouseDown="Label_MouseDown" Tag="{Binding}" />
           </DataTemplate>
         </ListBox.ItemTemplate>

@@ -87,7 +87,7 @@ namespace CommunityManager
         RunTagSelect frmTagSelect = new RunTagSelect();
 
         var allTags = Project.GetAllTags();
-        frmTagSelect.Init(sc.Tags, allTags, (tags) =>
+        frmTagSelect.Init(this.Project, sc.Tags, (tags) =>
         {
           new Windows.Run(Project, sc, tags).Show();
           frmTagSelect.Hide();
