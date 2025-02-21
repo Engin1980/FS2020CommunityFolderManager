@@ -184,8 +184,8 @@ namespace CommunityManager.Windows
       StartupConfiguration sc = (StartupConfiguration)lstStartupConfigurations.SelectedItem;
       RunExecutor re = new();
 
-      var addons = re.AnalyseAddons(Project, sc);
-      var programs = re.AnalysePrograms(Project, sc);
+      var addons = re.AnalyseAddons(Project, sc.Tags);
+      var programs = re.AnalysePrograms(Project, sc.Tags);
 
       var includedAddons = addons.Where(q => q.Value).Select(q => q.Key).ToList();
       var excludedAddons = addons.Where(q => !q.Value).Select(q => q.Key).ToList();

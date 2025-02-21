@@ -15,7 +15,7 @@ namespace CommunityManager.Converters
     {
       Brush ret;
 
-      int seed = value.GetHashCode();
+      int seed = value == null ? 0 : value.GetHashCode();
       Random rnd = new(seed);
 
       byte r = (byte)rnd.Next(128, 255);

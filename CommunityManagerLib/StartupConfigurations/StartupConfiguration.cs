@@ -28,5 +28,12 @@ namespace CommunityManagerLib.StartupConfigurations
         base.UpdateProperty(nameof(Tags), value);
       }
     }
+
+
+    public bool AskTagsOnRun
+    {
+      get { return base.GetProperty<bool>(nameof(AskTagsOnRun))!; }
+      set { base.UpdateProperty(nameof(AskTagsOnRun), value); }
+    }
   }
 }

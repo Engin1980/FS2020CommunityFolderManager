@@ -23,6 +23,7 @@ namespace CommunityManagerLib
     private const string SETTINGS_FILE = "config.json";
     private const string PROGRAM_FILE = "programs.json";
     private const string ADDONS_FILE = "addons.json";
+    private const string FAVOURITE_RUN_TAGS = "runTags.json";
     private const string STARTUP_CONFIGURATIONS_FILE = "startup_configurations.json";
 
     private static class EJson
@@ -182,7 +183,7 @@ namespace CommunityManagerLib
       }
       catch (Exception ex)
       {
-        throw new ApplicationException($"Failed to store starupt configurations to '{DATA_FOLDER + STARTUP_CONFIGURATIONS_FILE}.", ex);
+        throw new ApplicationException($"Failed to store starTup configurations to '{DATA_FOLDER + STARTUP_CONFIGURATIONS_FILE}.", ex);
       }
     }
 
@@ -211,6 +212,33 @@ namespace CommunityManagerLib
       {
         throw new ApplicationException($"Failed to save settings to '{DATA_FOLDER + SETTINGS_FILE}'.", ex);
       }
+    }
+
+    public void SaveFavouriteRunTags()
+    {
+      try
+      {
+        EJson.Save(this.FavouriteRunTags.ToList(), DATA_FOLDER + FAVOURITE_RUN_TAGS);
+      }
+      catch (Exception ex)
+      {
+        throw new ApplicationException($"Failed to store favourite tags to '{DATA_FOLDER + FAVOURITE_RUN_TAGS}.", ex);
+      }
+    }
+
+    public BindingList<string> ReloadFavouriteRunTags()
+    {
+      List<string> ret;
+      try
+      {
+        ret = EJson.Load<List<string>>(DATA_FOLDER + FAVOURITE_RUN_TAGS);
+      }
+      catch (Exception ex)
+      {
+        throw new ApplicationException($"Failed to load {DATA_FOLDER + PROGRAM_FILE}.", ex);
+      }
+
+      return ret.ToBindingList();
     }
 
     #endregion
@@ -307,6 +335,12 @@ namespace CommunityManagerLib
     {
       get => base.GetProperty<Settings.Settings>(nameof(Settings))!;
       set => base.UpdateProperty(nameof(Settings), value);
+    }
+
+    public BindingList<string> FavouriteRunTags
+    {
+      get => base.GetProperty<BindingList<string>>(nameof(FavouriteRunTags))!;
+      set => base.UpdateProperty(nameof(FavouriteRunTags), value);
     }
 
     #endregion

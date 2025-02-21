@@ -14,8 +14,8 @@ namespace CommunityManagerLib.RunProcedure
 
     public List<RunTask> BuildTasks(Project project, StartupConfiguration startupConfiguration)
     {
-      var includedAddons = new RunExecutor().AnalyseAddons(project, startupConfiguration);
-      var includedPrograms = new RunExecutor().AnalysePrograms(project, startupConfiguration);
+      var includedAddons = new RunExecutor().AnalyseAddons(project, startupConfiguration.Tags);
+      var includedPrograms = new RunExecutor().AnalysePrograms(project, startupConfiguration.Tags);
 
       List<RunTask> ret = new();
 

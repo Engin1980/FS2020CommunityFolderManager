@@ -177,5 +177,43 @@ namespace CommunityManager.Windows
         return Result.Error;
       }
     }
+
+    internal static void ReloadFavouriteRunTags(Project project, bool askForSure, bool showSuccessConfirmation)
+    {
+      if (askForSure)
+        if (Message.ShowDialog(CurrentWindow, "Load",
+          "You will loose all unsaved changes. Are you sure you would like to reload the data?",
+          Types.DialogResult.Yes, Types.DialogResult.Cancel) == Types.DialogResult.Cancel) return;
+      try
+      {
+        project.ReloadFavouriteRunTags();
+        if (showSuccessConfirmation)
+          Message.ShowDialog(CurrentWindow, "Load", "Changes have been reloaded.", Types.DialogResult.Ok);
+      }
+      catch (Exception ex)
+      {
+        Message.ShowDialog(CurrentWindow, "Failed to load settings.",
+          "Settings was not loaded: " + ex.ToMessageString() + "\n\n" +
+          "Settings are empty. Reset the FS2020 Configuration file. Addons WILL NOT be loaded too.",
+          Types.DialogResult.Ok);
+      }
+    }
+
+    internal static Result SaveFavouriteRunTags(Project project, bool showSuccessConfirmation)
+    {
+      try
+      {
+        project.SaveFavouriteRunTags();
+        if (showSuccessConfirmation)
+          Message.ShowDialog(CurrentWindow, "Saved.", "Changes have been saved.", Types.DialogResult.Ok);
+        return Result.Success;
+      }
+      catch (Exception ex)
+      {
+        Message.ShowDialog(CurrentWindow, "Save failed.", "Changes have not been saved. Reason: " + ex.ToMessageString(),
+          Types.DialogResult.Ok);
+        return Result.Error;
+      }
+    }
   }
 }

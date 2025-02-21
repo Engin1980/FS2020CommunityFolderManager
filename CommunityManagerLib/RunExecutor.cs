@@ -13,21 +13,21 @@ namespace CommunityManagerLib
   {
     public RunExecutor() { }
 
-    public Dictionary<SingleAddonView, bool> AnalyseAddons(Project project, StartupConfiguration startupConfiguration)
+    public Dictionary<SingleAddonView, bool> AnalyseAddons(Project project, List<string> activeTags)
     {
       Dictionary<SingleAddonView, bool> ret = new();
 
       foreach (var addonInfo in project.Addons.OfType<SingleAddonView>())
       {
         var availableTags = addonInfo.Addon.State.Tags;
-        var requiredTags = startupConfiguration.Tags;
+        var requiredTags = activeTags;
         ret[addonInfo] = IsTagMatch(requiredTags, availableTags);
       }
 
       foreach (var addonInfo in project.Addons.OfType<GroupAddonView>())
       {
         var availableTags = addonInfo.Addons.First().Addon.State.Tags;
-        var requiredTags = startupConfiguration.Tags;
+        var requiredTags = activeTags;
         foreach (var subaddonInfo in addonInfo.Addons)
         {
           ret[subaddonInfo] = IsTagMatch(requiredTags, availableTags);
@@ -37,14 +37,14 @@ namespace CommunityManagerLib
       return ret;
     }
 
-    public Dictionary<Program, bool> AnalysePrograms(Project project, StartupConfiguration startupConfiguration)
+    public Dictionary<Program, bool> AnalysePrograms(Project project, List<string> activeTags)
     {
       Dictionary<Program, bool> ret = new();
 
       foreach (var program in project.Programs)
       {
         var availableTags = program.Tags;
-        var requiredTags = startupConfiguration.Tags;
+        var requiredTags = activeTags;
         ret[program] = IsTagMatch(requiredTags, availableTags);
       }
 

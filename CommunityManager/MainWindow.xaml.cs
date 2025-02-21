@@ -1,6 +1,7 @@
 ﻿using CommunityManager.Types;
 using CommunityManager.Windows;
 using CommunityManagerLib;
+using CommunityManagerLib.Addons;
 using CommunityManagerLib.StartupConfigurations;
 using System;
 using System.Collections.Generic;
@@ -81,8 +82,24 @@ namespace CommunityManager
       this.closingShouldQuitApplication = false;
       Button btn = (Button)sender;
       StartupConfiguration sc = (StartupConfiguration)btn.Tag;
-      new Windows.Run(Project, sc).Show();
-      this.Hide();
+      if (sc.AskTagsOnRun)
+      {
+        RunTagSelect frmTagSelect = new RunTagSelect();
+
+        var allTags = Project.GetAllTags();
+        frmTagSelect.Init(sc.Tags, allTags, (tags) =>
+        {
+          new Windows.Run(Project, sc, tags).Show();
+          frmTagSelect.Hide();
+        });
+        frmTagSelect.Show();
+        this.Hide();
+      }
+      else
+      {
+        new Windows.Run(Project, sc, sc.Tags).Show();
+        this.Hide();
+      }
     }
 
     private void StartupConfigurations_ListChanged(object? sender, ListChangedEventArgs e)
@@ -123,6 +140,7 @@ namespace CommunityManager
         GuiUtils.SaveAddons(p, false);
         GuiUtils.SavePrograms(p, false);
         GuiUtils.SaveStartupConfigurations(p, false);
+        GuiUtils.SaveFavouriteRunTags(p, false);
       }
       else
       {
@@ -131,6 +149,7 @@ namespace CommunityManager
         GuiUtils.ReloadAddons(p, false, false);
         GuiUtils.ReloadPrograms(p, false, false);
         GuiUtils.ReloadStartupConfigurations(p, false, false);
+        GuiUtils.ReloadFavouriteRunTags(p, false, false);
       }
       this.Project = p;
       RebuildGrid();

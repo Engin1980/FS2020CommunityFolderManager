@@ -31,13 +31,15 @@ namespace CommunityManager.Windows
 
     private Project project;
     private StartupConfiguration startupConfiguration;
+    private List<string> tags;
     private BindingList<RunTask> ToDoList { get; set; } = new();
     private BindingList<RunTask> DoneList { get; set; } = new();
 
-    public Run(Project project, StartupConfiguration startupConfiguration) : this()
+    public Run(Project project, StartupConfiguration startupConfiguration, List<string> activeTags) : this()
     {
       this.project = project;
       this.startupConfiguration = startupConfiguration;
+      this.tags = activeTags;
     }
 
     public async void DoProcess()
