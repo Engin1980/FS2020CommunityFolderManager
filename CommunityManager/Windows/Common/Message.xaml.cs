@@ -90,10 +90,11 @@ namespace CommunityManager.Windows
     public static DialogResult ShowDialog(Window? owner, string title, string prompt, params DialogResult[] availableResults)
     {
       Data data = new(owner, title, prompt, availableResults);
-      new Message(data)
+      var dialog = new Message(data)
       {
         Owner = Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive)
-      }.ShowDialog();
+      };
+      dialog.ShowDialog();
       return data.DialogResult;
     }
 

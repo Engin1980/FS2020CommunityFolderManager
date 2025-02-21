@@ -9,6 +9,8 @@
     <Title>MSFS2020 Community Folder &amp; Program Manager</Title>
     <PackageIcon>cms.png</PackageIcon>
     <RepositoryUrl>https://github.com/Engin1980/FS2020CommunityFolderManager</RepositoryUrl>
+    <AssemblyVersion>1.0.0.2</AssemblyVersion>
+    <FileVersion>1.0.0.2</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
