@@ -40,7 +40,7 @@ namespace CommunityManager.Windows
       this.Project = project;
       this.listCollectionView = new(project.Addons);
       this.listCollectionView.SortDescriptions.Add(new SortDescription("Title", ListSortDirection.Ascending));
-      this.DataContext = this.listCollectionView; //project.Addons;
+      this.DataContext = this.listCollectionView;
     }
 
     private void Window_Loaded(object sender, RoutedEventArgs e)

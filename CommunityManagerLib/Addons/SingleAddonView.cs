@@ -16,6 +16,8 @@ namespace CommunityManagerLib.Addons
 
     public override string SourceName => this.Addon.Source.SourceName;
 
+    public override string ToString() => $"{this.Title} (addon)";
+
     public override List<string> Tags
     {
       get => this.Addon.State.Tags;

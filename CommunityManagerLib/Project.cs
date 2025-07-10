@@ -19,7 +19,7 @@ namespace CommunityManagerLib
 {
   public class Project : NotifyPropertyChangedBase
   {
-    private const string DATA_FOLDER = "data\\";
+    internal const string DATA_FOLDER = "data\\";
     private const string SETTINGS_FILE = "config.json";
     private const string PROGRAM_FILE = "programs.json";
     private const string ADDONS_FILE = "addons.json";

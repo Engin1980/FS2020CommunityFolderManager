@@ -98,6 +98,9 @@ namespace CommunityManager.Windows
       Context.AddonsLcv.Refresh();
       selected.ForEach(q => Context.SelectedGroupAddonsLcv.AddNewItem(q));
       Context.SelectedGroupAddonsLcv.CommitNew();
+
+      GroupAddonView gav = Context.SelectedGroup!;
+      selected.ForEach(q => q.Addon.State.GroupGuid = gav.Title);
     }
 
     private void btnMoveLeft_Click(object sender, RoutedEventArgs e)
@@ -106,13 +109,14 @@ namespace CommunityManager.Windows
       selected.ForEach(q => Context.SelectedGroupAddonsLcv.Remove(q));
       selected.ForEach(q=>this.addons.Add(q));
       Context.AddonsLcv.Refresh();
+
+      selected.ForEach(q => q.Addon.State.GroupGuid = null);
     }
 
     private void txtAllFilter_TextChanged(object sender, TextChangedEventArgs e)
     {
       if (txtAllFilter.Text.Length > 0)
-        this.Context.AddonsLcv.Filter = q =>
-        ((SingleAddonView)q).Title.ToLower().Contains(txtAllFilter.Text.ToLower());
+        this.Context.AddonsLcv.Filter = q => q is SingleAddonView && ((SingleAddonView)q).Title.ToLower().Contains(txtAllFilter.Text.ToLower());
       else
         this.Context.AddonsLcv.Filter = null;
     }
@@ -126,16 +130,16 @@ namespace CommunityManager.Windows
         this.Context.AddonsLcv.Filter = null;
     }
 
-    private void btnAdd_Click(object sender, RoutedEventArgs e)
-    {
-      var selected = lstAll.SelectedItems.Cast<SingleAddonView>().ToList();
-      selected.ForEach(q => this.addons.Remove(q));
-      Context.AddonsLcv.Refresh();
+    //private void btnAdd_Click(object sender, RoutedEventArgs e)
+    //{
+    //  var selected = lstAll.SelectedItems.Cast<SingleAddonView>().ToList();
+    //  selected.ForEach(q => this.addons.Remove(q));
+    //  Context.AddonsLcv.Refresh();
 
-      GroupAddonView groupAddonView = new(selected, "<new_group>");
-      this.Context.Groups.Add(groupAddonView);
-      this.Context.SelectedGroup = groupAddonView;
-    }
+    //  GroupAddonView groupAddonView = new(selected, "<new_group>");
+    //  this.Context.Groups.Add(groupAddonView);
+    //  this.Context.SelectedGroup = groupAddonView;
+    //}
 
     private void btnDissolve_Click(object sender, RoutedEventArgs e)
     {

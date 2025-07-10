@@ -83,5 +83,28 @@ namespace CommunityManager.Windows
       new MainWindow(this.Project).Show();
     }
 
+    private void btnOpenCommunityManagerFilesFolder_Click(object sender, RoutedEventArgs e)
+    {
+      string path = Project.Settings.ManagerFilesFolderPath;
+      if (!System.IO.Directory.Exists(path))
+      {
+        Message.ShowDialog(this, "Folder not found", $"The folder '{path}' does not exist.");
+        return;
+      }
+
+      try
+      {
+        Process.Start(new ProcessStartInfo
+        {
+          FileName = path,
+          UseShellExecute = true,
+          Verb = "open"
+        });
+      }
+      catch (Exception ex)
+      {
+        Message.ShowDialog(this, "Error opening folder", $"An error occurred while trying to open the folder:\n{ex.Message}");
+      }
+    }
   }
 }

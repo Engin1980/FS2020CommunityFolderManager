@@ -22,6 +22,10 @@ namespace CommunityManagerLib.Settings
       set => UpdateProperty(nameof(CommunityFolderPath), value);
     }
 
+    public string ManagerFilesFolderPath
+    {
+      get => Project.DATA_FOLDER;
+    }
 
     public bool AutoCloseAfterRun
     {

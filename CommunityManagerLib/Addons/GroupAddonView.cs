@@ -17,6 +17,8 @@ namespace CommunityManagerLib.Addons
 
     public override string SourceName => $"(group of {this.Addons.Count} addons)";
 
+    public override string ToString() => $"{this.Title} (group)";
+
     public override List<string> Tags
     {
       get => this.Addons.First().Tags;

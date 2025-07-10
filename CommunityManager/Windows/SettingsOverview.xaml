@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CommunityManager.Windows"
         mc:Ignorable="d"
-        Title="SettingsOverview" Height="450" Width="800" Closed="Window_Closed">
+        Title="SettingsOverview" Height="450" Width="800" SizeToContent="WidthAndHeight" Closed="Window_Closed">
   <DockPanel Margin="16">
     <DockPanel DockPanel.Dock="Top">
       <DockPanel DockPanel.Dock="Top" LastChildFill="False">
@@ -48,17 +48,25 @@
       <Grid.RowDefinitions>
         <RowDefinition Height="24" />
         <RowDefinition Height="24"/>
+        <RowDefinition Height="24"/>
       </Grid.RowDefinitions>
 
       <Label Grid.Row="0" Grid.Column="0" Content="FS2020 Community Folder" Padding="4" />
       <DockPanel Grid.Row="0" Grid.Column="1" >
-        <Button x:Name="btnBrowseCommunityFolder" DockPanel.Dock="Right" Content="(...)" Padding="0" Margin="0" 
+        <Button x:Name="btnBrowseCommunityFolder" DockPanel.Dock="Right" Content="Change" Padding="8 0 8 0" Margin="0" 
                 Click="btnBrowseCommunityFolder_Click" />
         <TextBox Text="{Binding CommunityFolderPath}" IsReadOnly="True" IsReadOnlyCaretVisible="True" />
       </DockPanel>
 
-      <Label Grid.Row="1" Grid.Column="0" Content="Auto close app after run" Padding="4" />
-      <DockPanel Grid.Row="1" Grid.Column="1">
+      <Label Grid.Row="1" Grid.Column="0" Content="Community Manager Files Folder:" Padding="4" />
+      <DockPanel Grid.Row="1" Grid.Column="1" >
+        <Button x:Name="btnOpenCommunityManagerFilesFolder" DockPanel.Dock="Right" Content="Show" Padding="8 0 8 0" Margin="0" 
+          Click="btnOpenCommunityManagerFilesFolder_Click" />
+        <TextBox Text="{Binding ManagerFilesFolderPath, Mode=OneWay}" IsReadOnly="True" IsReadOnlyCaretVisible="True" />
+      </DockPanel>
+
+      <Label Grid.Row="2" Grid.Column="0" Content="Auto close app after run" Padding="4" />
+      <DockPanel Grid.Row="2" Grid.Column="1">
         <CheckBox IsChecked="{Binding AutoCloseAfterRun}" Margin="4" />
         <TextBox IsEnabled="{Binding AutoCloseAfterRun}" Text="{Binding AutoCloseDelayInSeconds}" />
       </DockPanel>
