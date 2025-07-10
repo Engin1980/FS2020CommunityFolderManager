@@ -39,8 +39,10 @@
               <StackPanel Orientation="Horizontal" >
                 <Label Width="100" Content="{Binding State}"
                        Foreground="{Binding State,Converter={StaticResource RunTaskStateToGreenRedColorConverter}}"/>
-                <Label Width="400" Content="{Binding Title}"
-                       Foreground="{Binding State,Converter={StaticResource RunTaskStateToGreenRedColorConverter}}"/>
+                <Label Width="400" 
+                       Foreground="{Binding State,Converter={StaticResource RunTaskStateToGreenRedColorConverter}}">
+                  <TextBlock Text="{Binding Title}" />
+                </Label>
                 <Label Content="{Binding ResultText}"
                        Foreground="{Binding State,Converter={StaticResource RunTaskStateToGreenRedColorConverter}}"/>
               </StackPanel>
